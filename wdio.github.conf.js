@@ -1,4 +1,3 @@
-const fs = require('node:fs')
 const debug = process.env.DEBUG
 const oneHour = 60 * 60 * 1000
 
@@ -14,7 +13,7 @@ export const config = {
   // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
   // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
   // gets prepended directly.
-  baseUrl: `https://cdp-portal-journey-tests.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
+  baseUrl: `http://localhost:3000`,
 
   // Connection to remote chromedriver
   hostname: process.env.CHROMEDRIVER_URL || '127.0.0.1',
@@ -185,9 +184,7 @@ export const config = {
     context,
     { error, result, duration, passed, retries }
   ) {
-    if (error) {
-      await browser.takeScreenshot()
-    }
+    await browser.takeScreenshot()
   },
 
   /**
@@ -226,12 +223,7 @@ export const config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {<Object>} results object containing test results
    */
-  onComplete: function (exitCode, config, capabilities, results) {
-    // !Do Not Remove! Required for test status to show correctly in portal.
-    if (results?.failed && results.failed > 0) {
-      fs.writeFileSync('FAILED', JSON.stringify(results))
-    }
-  }
+  onComplete: function (exitCode, config, capabilities, results) {}
   /**
    * Gets executed when a refresh happens.
    * @param {string} oldSessionId session ID of the old session
