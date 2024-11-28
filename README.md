@@ -1,10 +1,13 @@
-cdp-portal-journey-tests
+# cdp-portal-journey-tests
 
-The template to create a service that runs WDIO tests against an environment.
+Testing CDP Portal.
 
-- [Requirements](#requirements)
-  - [Node.js](#nodejs)
+WDIO tests against an environment, github workflow or locally.
+
+- [Related Tests](#related-tests)
 - [Local](#local)
+  - [Requirements](#requirements)
+    - [Node.js](#nodejs)
   - [Setup](#setup)
   - [Running local tests](#running-local-tests)
   - [Debugging local tests](#debugging-local-tests)
@@ -14,6 +17,19 @@ The template to create a service that runs WDIO tests against an environment.
   - [About the licence](#about-the-licence)
 
 ## Local Development
+
+### Requirements
+
+#### Node.js
+
+Please install [Node.js](http://nodejs.org/) `>= v20` and [npm](https://nodejs.org/) `>= v9`. You will find it
+easier to use the Node Version Manager [nvm](https://github.com/creationix/nvm)
+
+To use the correct version of Node.js for this application, via nvm:
+
+```bash
+nvm use
+```
 
 ### Setup
 
@@ -25,7 +41,10 @@ npm install
 
 ### Running local tests
 
-Start application you are testing on the url specified in `baseUrl` [wdio.local.conf.js](wdio.local.conf.js)
+1. Edit [wdio.local.conf.js](wdio.local.conf.js) and set `baseUrl` to your service under test.
+
+1. Start application you are testing on the url specified in `baseUrl`
+
 
 ```bash
 npm run test:local
