@@ -41,6 +41,9 @@ services:
 ################################################################################
   localstack:
     image: localstack/localstack:3.2.0
+    ports:
+      - 4566:4566
+      - 4510-4559:4510-4559
     environment:
       - LOCALSTACK_HOST=127.0.0.1
       - SERVICES=s3,sqs,sns,dynamodb
@@ -48,6 +51,7 @@ services:
     env_file:
       - ./docker/config/defaults.env
     volumes:
+      - ./docker/config/defaults.env:/etc/localstack/conf.d/defaults.env:ro
       - ./docker/scripts/localstack:/etc/localstack/init/ready.d
     healthcheck:
       test: ["CMD", "curl", "localhost:4566"]
@@ -73,9 +77,14 @@ services:
 ################################################################################
   cdp-portal-frontend:
     image: defradigital/cdp-portal-frontend:latest
+    ports:
+      - 3000:3000
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "cdp.127.0.0.1.sslip.io:host-gateway"
     env_file:
       - ./docker/config/defaults.env
-      - ./docker/config/portal-frontend.env
+      - ./docker/config/cdp-portal-frontend.env
     environment:
       - PORT=3000
     depends_on:
@@ -87,8 +96,8 @@ services:
         condition: service_started
       redis:
         condition: service_healthy
-    ports:
-      - 3000:3000
+      cdp-portal-stubs:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "http://localhost:3000/health"]
       interval: 3s
@@ -100,9 +109,12 @@ services:
     image: defradigital/cdp-portal-backend:latest
     ports:
       - 5094:5094
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "cdp.127.0.0.1.sslip.io:host-gateway"
     env_file:
       - ./docker/config/defaults.env
-      - ./docker/config/portal-backend.env
+      - ./docker/config/cdp-portal-backend.env
     environment:
       - PORT=5094
     depends_on:
@@ -114,15 +126,20 @@ services:
         condition: service_started
       cdp-user-service-backend:
         condition: service_started
+      cdp-portal-stubs:
+        condition: service_healthy
 
 ################################################################################
   cdp-user-service-backend:
     image: defradigital/cdp-user-service-backend:latest
     ports:
       - 3001:3001
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "cdp.127.0.0.1.sslip.io:host-gateway"
     env_file:
-      - ./config/defaults.env
-      - ./config/cdp-user-service-backend.env
+      - ./docker/config/defaults.env
+      - ./docker/config/cdp-user-service-backend.env
     environment:
       - PORT=3001
     depends_on:
@@ -130,8 +147,10 @@ services:
         condition: service_healthy
       mongodb:
         condition: service_started
+      cdp-portal-stubs:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "http://localhost:3001/health"]
+      test: ["CMD", "curl", "http://cdp-user-service-backend:3001/health"]
       interval: 3s
       start_period: 2s
       retries: 3
@@ -141,9 +160,12 @@ services:
     image: defradigital/cdp-self-service-ops:latest
     ports:
       - 3009:3009
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "cdp.127.0.0.1.sslip.io:host-gateway"
     env_file:
-      - ./config/defaults.env
-      - ./config/cdp-self-service-ops.env
+      - ./docker/config/defaults.env
+      - ./docker/config/cdp-self-service-ops.env
     environment:
       - PORT=3009
     depends_on:
@@ -151,8 +173,10 @@ services:
         condition: service_healthy
       mongodb:
         condition: service_started
+      cdp-portal-stubs:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "http://localhost:3009/health"]
+      test: ["CMD", "curl", "http://cdp-self-service-ops:3009/health"]
       interval: 3s
       start_period: 2s
       retries: 3
@@ -161,13 +185,15 @@ services:
   cdp-portal-stubs:
     image: defradigital/cdp-portal-stubs:latest
     env_file:
-      - ./config/defaults.env
-      - ./config/cdp-portal-stubs.env
+      - ./docker/config/defaults.env
+      - ./docker/config/cdp-portal-stubs.env
     ports:
       - 3939:3939
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "cdp.127.0.0.1.sslip.io:host-gateway"
     environment:
       - PORT=3939
-      - OIDC_SHOW_LOGIN=true
     depends_on:
       localstack:
         condition: service_healthy
@@ -179,5 +205,5 @@ services:
       test: ["CMD", "echo", "Y29uc3QgZT1yZXF1aXJlKCJodHRwIiksdD17aG9zdG5hbWU6ImxvY2FsaG9zdCIscG9ydDpwcm9jZXNzLmVudi5QT1JULHBhdGg6Ii9oZWFsdGgiLG1ldGhvZDoiR0VUIn0sbz1lLnJlcXVlc3QodCwoZT0+e2xldCB0PSIiO2Uub24oImRhdGEiLChlPT57dCs9ZX0pKSxlLm9uKCJlbmQiLCgoKT0+e3Byb2Nlc3MuZXhpdCgwKX0pKX0pKTtvLm9uKCJlcnJvciIsKGU9Pntwcm9jZXNzLmV4aXQoMSl9KSksby5lbmQoKTsK", "|", "base64", "-d", "|", "node", "-"]
       interval: 3s
       start_period: 2s
-    profiles:
-      - portal
+
+################################################################################
