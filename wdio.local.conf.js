@@ -65,6 +65,7 @@ export const config = {
           'goog:chromeOptions': {
             args: [
               '--no-sandbox',
+              //   '--headless',
               '--disable-infobars',
               '--disable-gpu',
               '--window-size=1920,1080'
