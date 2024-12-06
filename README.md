@@ -4,6 +4,12 @@ Testing CDP Portal.
 
 WDIO tests against an environment, github workflow or locally.
 
+
+> [!WARNING]
+> DO NOT DEPLOY THESE TESTS TO AN CDP ENVIRONMENT AT THE MOMENT!
+> Contains non-ephemeral flows.
+
+
 - [Related Tests](#related-tests)
 - [Local](#local)
   - [Requirements](#requirements)
