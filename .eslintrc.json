@@ -4,7 +4,16 @@
     "node": true,
     "jest": true
   },
-  "extends": ["standard", "prettier", "plugin:wdio/recommended"],
+  "globals": {
+    "before": true,
+    "after": true
+  },
+  "extends": [
+    "standard",
+    "prettier",
+    "eslint:recommended",
+    "plugin:wdio/recommended"
+  ],
   "overrides": [],
   "parserOptions": {
     "ecmaVersion": "latest"
