@@ -4,11 +4,9 @@ Testing CDP Portal.
 
 WDIO tests against an environment, github workflow or locally.
 
-
 > [!WARNING]
 > DO NOT DEPLOY THESE TESTS TO AN CDP ENVIRONMENT AT THE MOMENT!
 > Contains non-ephemeral flows.
-
 
 - [Related Tests](#related-tests)
 - [Local](#local)
@@ -50,7 +48,6 @@ npm install
 1. Edit [wdio.local.conf.js](wdio.local.conf.js) and set `baseUrl` to your service under test.
 
 1. Start application you are testing on the url specified in `baseUrl`
-
 
 ```bash
 npm run test:local
