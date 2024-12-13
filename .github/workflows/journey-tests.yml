@@ -1,4 +1,4 @@
-name: Run Journey Tests on GitHub
+name: Journey Tests
 
 permissions:
   checks: write
