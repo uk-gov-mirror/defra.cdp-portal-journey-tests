@@ -16,6 +16,7 @@ jobs:
         shell: bash
     steps:
       - uses: actions/checkout@v4
+        repository: cdp-portal-journey-tests
       - uses: actions/setup-node@v4
         with:
           node-version: 20
