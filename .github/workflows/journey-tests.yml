@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: cdp-portal-journey-tests
+          repository: DEFRA/cdp-portal-journey-tests
       - uses: actions/setup-node@v4
         with:
           node-version: 20
