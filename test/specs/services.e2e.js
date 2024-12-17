@@ -18,8 +18,9 @@ describe('Services page', () => {
       await expect(browser).toHaveTitle(
         'Services | Core Delivery Platform - Portal'
       )
+
       await expect(await ServicesPage.navIsActive()).toBe(true)
-      await expect(ServicesPage.pageHeading()).toHaveText('Services')
+      await expect(HeadingComponent.title('Services')).toExist()
       await expect(
         HeadingComponent.caption(
           'Frontend and Backend microservice information.'
@@ -33,7 +34,7 @@ describe('Services page', () => {
         `${tenantService} microservice | Core Delivery Platform - Portal`
       )
       await expect(await ServicesPage.navIsActive()).toBe(true)
-      await expect(ServicesPage.pageHeading()).toHaveText(tenantService)
+      await expect(HeadingComponent.title(tenantService)).toExist()
       await expect(
         HeadingComponent.caption(
           `Information about the ${tenantService} microservice`
