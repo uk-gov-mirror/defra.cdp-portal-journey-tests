@@ -1,5 +1,8 @@
+const allure = require('allure-commandline')
+
 const debug = process.env.DEBUG
 const oneHour = 60 * 60 * 1000
+const oneMinute = 60 * 1000
 
 export const config = {
   //
@@ -218,7 +221,29 @@ export const config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {<Object>} results object containing test results
    */
-  onComplete: function (exitCode, config, capabilities, results) {}
+  onComplete: function (exitCode, config, capabilities, results) {
+    if (results?.failed && results.failed > 0) {
+      const reportError = new Error('Could not generate Allure report')
+      const generation = allure(['generate', 'allure-results', '--clean'])
+
+      return new Promise((resolve, reject) => {
+        const generationTimeout = setTimeout(
+          () => reject(reportError),
+          oneMinute
+        )
+
+        generation.on('exit', function (exitCode) {
+          clearTimeout(generationTimeout)
+
+          if (exitCode !== 0) {
+            return reject(reportError)
+          }
+
+          resolve()
+        })
+      })
+    }
+  }
   /**
    * Gets executed when a refresh happens.
    * @param {string} oldSessionId session ID of the old session
