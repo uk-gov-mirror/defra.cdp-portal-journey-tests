@@ -36,7 +36,7 @@ describe('Services page', () => {
       await expect(ServicesPage.pageHeading()).toHaveText(tenantService)
       await expect(
         HeadingComponent.caption(
-          `Information about the ${tenantService} microservice.`
+          `Information about the ${tenantService} microservice`
         )
       ).toExist()
     })

@@ -1,28 +1,23 @@
 import { Page } from 'page-objects/page'
-import SplitPaneComponent from 'components/split-pane.component'
 import { $ } from '@wdio/globals'
 
 class TeamPage extends Page {
-  /**
-   * Check if the user sub nav link is active
-   * @returns {Promise<boolean>}
-   */
-  async subNavIsActive() {
-    return await SplitPaneComponent.subNavIsActive('teams')
+  navIsActive() {
+    return super.navIsActive('teams')
   }
 
-  teamMember(content) {
-    return $('[data-testid="team-member"]*=' + content)
+  teamMembers() {
+    return $('[data-testid="team-members"]')
   }
 
   removeButton(name) {
-    const memberRow = $$('[data-testid="team-members"] tr').find(async (tr) => {
-      const textContent = await tr.getText()
+    const listItem = $$('[data-testid="team-members"] li').find(async (li) => {
+      const textContent = await li.getText()
 
       return textContent.includes(name)
     })
 
-    return memberRow.$('[data-testid="remove-member-button"]')
+    return listItem.$('a[data-testid="app-link"]*=Remove')
   }
 
   open(value) {

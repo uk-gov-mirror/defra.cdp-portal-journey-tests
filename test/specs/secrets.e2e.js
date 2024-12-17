@@ -42,7 +42,7 @@ describe('Secrets feature', () => {
       await expect(ServicesPage.pageHeading()).toHaveText(tenantService)
       await expect(
         HeadingComponent.caption(
-          'Information about the cdp-portal-frontend microservice.'
+          'Information about the cdp-portal-frontend microservice'
         )
       ).toExist()
 
