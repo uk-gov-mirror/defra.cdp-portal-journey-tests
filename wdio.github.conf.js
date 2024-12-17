@@ -39,6 +39,7 @@ export const config = {
           '--headless',
           '--disable-gpu',
           '--window-size=1920,1080',
+          '--disable-dev-shm-usage',
           '--enable-features=NetworkService,NetworkServiceInProcess',
           '--password-store=basic',
           '--use-mock-keychain',
