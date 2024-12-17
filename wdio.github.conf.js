@@ -13,7 +13,7 @@ export const config = {
   // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
   // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
   // gets prepended directly.
-  baseUrl: `http://localhost:3000`,
+  baseUrl: `http://cdp-portal-frontend:3000`,
 
   // Connection to remote chromedriver
   hostname: process.env.CHROMEDRIVER_URL || '127.0.0.1',
@@ -29,11 +29,6 @@ export const config = {
     {
       browserName: 'chrome',
       // Outbound calls must go via the proxy
-      proxy: {
-        proxyType: 'manual',
-        httpProxy: 'localhost:3128',
-        sslProxy: 'localhost:3128'
-      },
       'goog:chromeOptions': {
         args: [
           '--no-sandbox',
