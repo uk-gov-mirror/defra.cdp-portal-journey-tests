@@ -30,6 +30,12 @@ jobs:
         run: |
           npm run test:github
           npm run report
+      - name: upload artifact
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: ./allure-report
       - name: debug
         if: failure()
         run: |

@@ -1,5 +1,8 @@
+const allure = require('allure-commandline')
+
 const debug = process.env.DEBUG
 const oneHour = 60 * 60 * 1000
+const oneMinute = 60 * 1000
 
 export const config = {
   //
@@ -16,7 +19,7 @@ export const config = {
   baseUrl: `http://cdp-portal-frontend:3000`,
 
   // Connection to remote chromedriver
-  hostname: process.env.CHROMEDRIVER_URL || '127.0.0.1',
+  hostname: process.env.CHROMEDRIVER_URL || 'localhost',
   port: process.env.CHROMEDRIVER_PORT || 4444,
 
   // Tests to run
@@ -218,7 +221,29 @@ export const config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {<Object>} results object containing test results
    */
-  onComplete: function (exitCode, config, capabilities, results) {}
+  onComplete: function (exitCode, config, capabilities, results) {
+    if (results?.failed && results.failed > 0) {
+      const reportError = new Error('Could not generate Allure report')
+      const generation = allure(['generate', 'allure-results', '--clean'])
+
+      return new Promise((resolve, reject) => {
+        const generationTimeout = setTimeout(
+          () => reject(reportError),
+          oneMinute
+        )
+
+        generation.on('exit', function (exitCode) {
+          clearTimeout(generationTimeout)
+
+          if (exitCode !== 0) {
+            return reject(reportError)
+          }
+
+          resolve()
+        })
+      })
+    }
+  }
   /**
    * Gets executed when a refresh happens.
    * @param {string} oldSessionId session ID of the old session

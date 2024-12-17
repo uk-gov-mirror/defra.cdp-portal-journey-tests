@@ -23,6 +23,9 @@ services:
 # Headless browser, used by the test suite to actually run the tests against the
 # containers.
   selenium-chrome:
+
+  # Run locally on a mac
+  #  image: selenium/standalone-chrome:119.0
     image: selenium/standalone-chrome:latest
     ports:
       - 4444:4444
@@ -87,7 +90,6 @@ services:
       - ./docker/config/cdp-portal-frontend.env
     environment:
       - PORT=3000
-      - NODE_ENV=development # This is required for the login cooke it work
     depends_on:
       cdp-portal-backend:
         condition: service_started
