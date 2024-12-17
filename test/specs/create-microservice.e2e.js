@@ -138,7 +138,7 @@ describe('Create microservice', () => {
 
       await expect(
         HeadingComponent.caption(
-          `Information about the ${testRepositoryName} microservice.`
+          `Information about the ${testRepositoryName} microservice`
         )
       ).toExist()
     })
@@ -153,7 +153,7 @@ describe('Create microservice', () => {
       await expect(HeadingComponent.title('Services')).toExist()
       await expect(
         HeadingComponent.caption(
-          'Frontend and Backend microservice information.'
+          'Frontend and Backend microservice information'
         )
       ).toExist()
 
