@@ -5,6 +5,12 @@ const baseUrl = process.env.BASE_URL
 const oneMinute = 60 * 1000
 const oneHour = 60 * 60 * 1000
 
+const execArgv = ['--loader', 'esm-module-alias/loader']
+
+if (debug) {
+  execArgv.push('--inspect')
+}
+
 export const config = {
   //
   // ====================
@@ -47,7 +53,7 @@ export const config = {
         }
       ],
 
-  execArgv: debug ? ['--inspect'] : [],
+  execArgv,
 
   logLevel: debug ? 'debug' : 'info',
 

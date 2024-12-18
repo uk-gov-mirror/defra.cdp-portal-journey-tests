@@ -52,7 +52,7 @@ export const config = {
     }
   ],
 
-  execArgv: debug ? ['--inspect'] : [],
+  execArgv: ['--loader', 'esm-module-alias/loader'],
 
   logLevel: debug ? 'debug' : 'info',
 

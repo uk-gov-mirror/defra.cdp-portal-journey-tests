@@ -8,6 +8,11 @@
   },
   "author": "Defra DDTS",
   "license": "OGL-UK-3.0",
+  "aliases": {
+    "~": "*",
+    "page-objects": "test/page-objects",
+    "components": "test/components"
+  },
   "scripts": {
     "clean": "rm -rf allure-results && rm -rf allure-report",
     "test": "npm run clean && wdio run wdio.conf.js",
