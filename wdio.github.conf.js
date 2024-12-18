@@ -181,9 +181,9 @@ export const config = {
     context,
     { error, result, duration, passed, retries }
   ) {
-    if (error) {
-      await browser.takeScreenshot()
-    }
+    // if (error) {
+    await browser.takeScreenshot()
+    // }
   },
 
   /**
