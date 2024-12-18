@@ -70,7 +70,7 @@ db.teams.updateOne(
       name: "TenantTeam1",
       description: "A test team",
       github: "cdp-tenant-1",
-      users: [],
+      users: ["dfa791eb-76b2-434c-ad1f-bb9dc1dd8b48"],
       scopes: [],
       createdAt: "2024-10-26T12:51:00.028Z",
       updatedAt: "2024-10-26T12:55:00.028Z",
