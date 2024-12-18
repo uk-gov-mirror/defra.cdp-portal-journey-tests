@@ -1,7 +1,5 @@
 import allure from 'allure-commandline'
 
-const debug = process.env.DEBUG
-const oneHour = 60 * 60 * 1000
 const oneMinute = 60 * 1000
 
 export const config = {
@@ -52,9 +50,9 @@ export const config = {
     }
   ],
 
-  execArgv: debug ? ['--inspect'] : [],
+  execArgv: ['--loader', 'esm-module-alias/loader'],
 
-  logLevel: debug ? 'debug' : 'info',
+  logLevel: 'info',
 
   // Number of failures before the test suite bails.
   bail: 0,
@@ -88,7 +86,7 @@ export const config = {
   // See the full list at http://mochajs.org/
   mochaOpts: {
     ui: 'bdd',
-    timeout: debug ? oneHour : 60000
+    timeout: oneMinute
   },
   //
   // =====
