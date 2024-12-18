@@ -1,4 +1,4 @@
-const allure = require('allure-commandline')
+import allure from 'allure-commandline'
 
 const debug = process.env.DEBUG
 const baseUrl = process.env.BASE_URL

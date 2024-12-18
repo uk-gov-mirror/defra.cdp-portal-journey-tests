@@ -1,4 +1,5 @@
-const fs = require('node:fs')
+import fs from 'node:fs'
+
 const oneHour = 60 * 60 * 1000
 
 export const config = {
