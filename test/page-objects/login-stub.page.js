@@ -12,18 +12,22 @@ class LoginStubPage extends Page {
 
   async loginAsAdmin() {
     await super.login()
-    await this.onLoginStubsPage()
-    return await this.adminUserLink().click()
+    await expect(browser).toHaveTitle('CDP-Portal-Stubs - Login Stub')
+
+    const adminUserLink = this.adminUserLink()
+    await expect(adminUserLink).toExist()
+
+    await adminUserLink.click()
   }
 
   async loginAsNonAdmin() {
     await super.login()
-    await this.onLoginStubsPage()
-    return await this.nonAdminUserLink().click()
-  }
+    await expect(browser).toHaveTitle('CDP-Portal-Stubs - Login Stub')
 
-  onLoginStubsPage() {
-    return expect(browser).toHaveTitle('CDP-Portal-Stubs - Login Stub')
+    const nonAdminUserLink = this.nonAdminUserLink()
+    await expect(nonAdminUserLink).toExist()
+
+    await nonAdminUserLink.click()
   }
 }
 

@@ -38,5 +38,9 @@ describe('Admin', () => {
       await expect(await AdminPage.navIsActive()).toBe(true)
       await expect(PageHeadingComponent.title('Users')).toExist()
     })
+
+    after(async () => {
+      await AdminPage.logOut()
+    })
   })
 })
