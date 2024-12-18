@@ -1,5 +1,6 @@
 import { $, browser, expect } from '@wdio/globals'
-import { upperFirst, kebabCase } from 'lodash'
+import kebabCase from 'lodash/kebabCase.js'
+import upperFirst from 'lodash/upperFirst.js'
 
 import DeployPage from 'page-objects/deploy.page'
 import DeploymentsPage from 'page-objects/deployments.page'
