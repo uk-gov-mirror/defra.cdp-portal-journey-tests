@@ -4,7 +4,7 @@ import HeadingComponent from 'components/heading.component'
 import TabsComponent from 'components/tabs.component'
 import SplitPaneComponent from 'components/split-pane.component'
 import ServicesPage from 'page-objects/services.page'
-import SecretsPage from '~/test/page-objects/secrets.page'
+import SecretsPage from 'page-objects/secrets.page'
 import ErrorPage from 'page-objects/error.page'
 import LoginStubPage from 'page-objects/login-stub.page'
 

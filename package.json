@@ -9,7 +9,7 @@
   "author": "Defra DDTS",
   "license": "OGL-UK-3.0",
   "aliases": {
-    "~": "*",
+    "helpers": "test/helpers",
     "page-objects": "test/page-objects",
     "components": "test/components"
   },

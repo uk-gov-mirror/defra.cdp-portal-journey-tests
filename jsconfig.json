@@ -3,7 +3,7 @@
     "target": "es2020",
     "baseUrl": "./",
     "paths": {
-      "~/*": ["./*"],
+      "helpers/*": ["./test/helpers/*"],
       "page-objects/*": ["./test/page-objects/*"],
       "components/*": ["./test/components/*"]
     }
