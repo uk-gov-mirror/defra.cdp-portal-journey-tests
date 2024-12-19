@@ -23,10 +23,7 @@ services:
 # Headless browser, used by the test suite to actually run the tests against the
 # containers.
   selenium-chrome:
-
-  # Run locally on a mac
-    image: selenium/standalone-chrome:119.0
-#    image: selenium/standalone-chrome:latest
+    image: selenium/standalone-chrome:123.0
     ports:
       - 4444:4444
     environment:

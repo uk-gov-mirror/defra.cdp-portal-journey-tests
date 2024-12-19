@@ -8,15 +8,23 @@ WDIO tests against an environment, github workflow or locally.
 > DO NOT DEPLOY THESE TESTS TO AN CDP ENVIRONMENT AT THE MOMENT!
 > Contains non-ephemeral flows.
 
-- [Related Tests](#related-tests)
-- [Local](#local)
+- [Local Development](#local-development)
   - [Requirements](#requirements)
     - [Node.js](#nodejs)
   - [Setup](#setup)
-  - [Running local tests](#running-local-tests)
-  - [Debugging local tests](#debugging-local-tests)
+  - [Running](#running)
+    - [Local](#local)
+    - [Local with debug](#local-with-debug)
+    - [GitHub](#github)
+  - [Debugging](#debugging)
+    - [WebdriverIO Plugin](#webdriverio-plugin)
+    - [Setup in IntelliJ/Webstorm](#setup-in-intellijwebstorm)
+    - [Debug environment variable](#debug-environment-variable)
+    - [WebdriverIO debug command](#webdriverio-debug-command)
 - [Production](#production)
-  - [Debugging tests](#debugging-tests)
+  - [Running the tests](#running-the-tests)
+- [Requirements of CDP Environment Tests](#requirements-of-cdp-environment-tests)
+- [Running on GitHub](#running-on-github)
 - [Licence](#licence)
   - [About the licence](#about-the-licence)
 
@@ -43,35 +51,106 @@ Install application dependencies:
 npm install
 ```
 
-### Running local tests
+### Running
 
-1. Edit [wdio.local.conf.js](wdio.local.conf.js) and set `baseUrl` to your service under test.
+#### Local
 
-1. Start application you are testing on the url specified in `baseUrl`
+To run against portal running locally on `http://localhost:3000`:
 
 ```bash
 npm run test:local
 ```
 
-### Debugging local tests
+#### Local with debug
+
+To debug a local version of the portal running on `http://localhost:3000`:
 
 ```bash
 npm run test:local:debug
+```
+
+#### GitHub
+
+To mimic the GitHub workflow locally. Start up the docker compose:
+
+```bash
+docker compose up --wait-timeout 300 -d --quiet-pull --force-recreate
+```
+
+Then run the following command:
+
+```bash
+npm run test:github
+```
+
+### Debugging
+
+#### WebdriverIO Plugin
+
+In IntelliJ and Webstorm use the [WebdriverIO Plugin](https://plugins.jetbrains.com/plugin/16147-webdriverio). This
+provides full run, debug and breakpoint capabilities in your WebDriverIO tests.
+
+#### Setup in IntelliJ/Webstorm
+
+1. Add a `WebdriverIO` configuration template
+1. `Run -> Edit configurations`
+1. `Edit configuration templates -> WebdriverIO`
+1. Add the following values to the `WebdriverIO` configuration template:
+   ![WebDriverIO configuration template](docs/webdriverio-plugin/webdriverio-configuration-template.png)
+1. Add an `All tests configuration`
+1. `Run -> Edit configurations`
+1. `Add new configuration -> WebdriverIO`
+1. `Add the values shown in the following image`:
+   ![WebDriverIO all tests configuration](docs/webdriverio-plugin/all-tests.png)
+1. You can now run and debug your tests in IntelliJ/Webstorm:
+   ![WebDriverIO with test controls](docs/webdriverio-plugin/with-test-controls.png)
+
+> [!NOTE]
+> If you wish to run against cdp-local-environment, you will need to set the `Wdio config file` to point at `wdio.
+docker.conf.js` in the `WebdriverIO` configuration template:
+
+#### Debug environment variable
+
+You can also set the following env:
+
+> This provides debug config in the [wdio.local.conf.js](./wdio.local.conf.js) file
+
+```bash
+DEBUG=true
+```
+
+Or use the npm script:
+
+> This script automatically sets the debug environment variable
+
+```bash
+npm run test-local:debug
+```
+
+#### WebdriverIO debug command
+
+Use the following command in code:
+
+```javascript
+browser.debug()
 ```
 
 ## Production
 
 ### Running the tests
 
-Tests are run from the CDP-Portal under the Test Suites section. Before any changes can be run, a new docker image must be built, this will happen automatically when a pull request is merged into the `main` branch.
-You can check the progress of the build under the actions section of this repository. Builds typically take around 1-2 minutes.
+Tests are run from the CDP-Portal under the Test Suites section. Before any changes can be run, a new docker image must
+be built, this will happen automatically when a pull request is merged into the `main` branch.
+You can check the progress of the build under the actions section of this repository. Builds typically take around 1-2
+minutes.
 
 The results of the test run are made available in the portal.
 
 ## Requirements of CDP Environment Tests
 
 1. Your service builds as a docker container using the `.github/workflows/publish.yml`
-   The workflow tags the docker images allowing the CDP Portal to identify how the container should be run on the platform.
+   The workflow tags the docker images allowing the CDP Portal to identify how the container should be run on the
+   platform.
    It also ensures its published to the correct docker repository.
 
 2. The Dockerfile's entrypoint script should return exit code of 0 if the test suite passes or 1/>0 if it fails
@@ -81,8 +160,10 @@ The results of the test run are made available in the portal.
 ## Running on GitHub
 
 Alternatively you can run the test suite as a GitHub workflow.
-Test runs on GitHub are not able to connect to the CDP Test environments. Instead, they run the tests agains a version of the services running in docker.
-A docker compose `compose.yml` is included as a starting point, which includes the databases (mongodb, redis) and infrastructure (localstack) pre-setup.
+Test runs on GitHub are not able to connect to the CDP Test environments. Instead, they run the tests agains a version
+of the services running in docker.
+A docker compose `compose.yml` is included as a starting point, which includes the databases (mongodb, redis) and
+infrastructure (localstack) pre-setup.
 
 Steps:
 
@@ -93,7 +174,8 @@ Steps:
 
 By default, the provided workflow will run when triggered manually from GitHub or when triggered by another workflow.
 
-If you want to use the repository exclusively for running docker composed based test suites consider displaying the publish.yml workflow.
+If you want to use the repository exclusively for running docker composed based test suites consider displaying the
+publish.yml workflow.
 
 ## Licence
 
