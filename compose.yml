@@ -25,8 +25,8 @@ services:
   selenium-chrome:
 
   # Run locally on a mac
-  #  image: selenium/standalone-chrome:119.0
-    image: selenium/standalone-chrome:latest
+    image: selenium/standalone-chrome:119.0
+#    image: selenium/standalone-chrome:latest
     ports:
       - 4444:4444
     environment:
