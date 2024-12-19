@@ -29,6 +29,8 @@ services:
     image: selenium/standalone-chrome:latest
     ports:
       - 4444:4444
+    environment:
+      - SE_ENABLE_TRACING=false
 
 ################################################################################
   mongodb:
