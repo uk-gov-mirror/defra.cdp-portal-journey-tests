@@ -1,6 +1,6 @@
 import { browser, expect } from '@wdio/globals'
 
-import HeadingComponent from 'components/heading.component'
+import PageHeadingComponent from 'components/page-heading.component'
 import ServicesPage from 'page-objects/services.page'
 import LoginStubPage from 'page-objects/login-stub.page'
 
@@ -20,12 +20,7 @@ describe('Services page', () => {
       )
 
       await expect(await ServicesPage.navIsActive()).toBe(true)
-      await expect(HeadingComponent.title('Services')).toExist()
-      await expect(
-        HeadingComponent.caption(
-          'Frontend and Backend microservice information'
-        )
-      ).toExist()
+      await expect(PageHeadingComponent.title('Services')).toExist()
     })
 
     it('Should navigate to a "Service" page', async () => {
@@ -34,12 +29,8 @@ describe('Services page', () => {
         `${tenantService} microservice | Core Delivery Platform - Portal`
       )
       await expect(await ServicesPage.navIsActive()).toBe(true)
-      await expect(HeadingComponent.title(tenantService)).toExist()
-      await expect(
-        HeadingComponent.caption(
-          `Information about the ${tenantService} microservice`
-        )
-      ).toExist()
+      await expect(PageHeadingComponent.title(tenantService)).toExist()
+      await expect(PageHeadingComponent.caption('Service')).toExist()
     })
   })
 })

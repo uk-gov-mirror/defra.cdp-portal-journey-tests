@@ -4,6 +4,7 @@ import CreatePage from 'page-objects/create.page'
 import ServicesPage from 'page-objects/services.page'
 import FormComponent from 'components/form.component'
 import HeadingComponent from 'components/heading.component'
+import PageHeadingComponent from 'components/page-heading.component'
 import EntityListComponent from 'components/entity-list.component'
 import ErrorPage from 'page-objects/error.page'
 import LoginStubPage from 'page-objects/login-stub.page'
@@ -134,13 +135,8 @@ describe('Create microservice', () => {
         `${testRepositoryName} microservice | Core Delivery Platform - Portal`
       )
       await expect(await ServicesPage.navIsActive()).toBe(true)
-      await expect(HeadingComponent.title(testRepositoryName)).toExist()
-
-      await expect(
-        HeadingComponent.caption(
-          `Information about the ${testRepositoryName} microservice`
-        )
-      ).toExist()
+      await expect(PageHeadingComponent.caption('Service')).toExist()
+      await expect(PageHeadingComponent.title(testRepositoryName)).toExist()
     })
 
     it('Should display new microservice on services list page', async () => {
@@ -150,12 +146,7 @@ describe('Create microservice', () => {
         'Services | Core Delivery Platform - Portal'
       )
       await expect(await ServicesPage.navIsActive()).toBe(true)
-      await expect(HeadingComponent.title('Services')).toExist()
-      await expect(
-        HeadingComponent.caption(
-          'Frontend and Backend microservice information'
-        )
-      ).toExist()
+      await expect(PageHeadingComponent.title('Services')).toExist()
 
       await expect(EntityListComponent.entityLink(testRepositoryName)).toExist()
     })
