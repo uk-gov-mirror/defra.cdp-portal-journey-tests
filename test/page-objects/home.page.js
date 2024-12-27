@@ -4,7 +4,7 @@ import { Page } from 'page-objects/page'
 
 class HomePage extends Page {
   serviceName() {
-    return $('[data-testid="app-header-service-name"]')
+    return $('[data-testid="app-service-header-service-name"]')
   }
 
   userName() {
