@@ -40,7 +40,7 @@ describe('Secrets feature', () => {
     it('Should be a tab on a "Service" page', async () => {
       await expect(await ServicesPage.navIsActive()).toBe(true)
       await expect(PageHeadingComponent.caption('Service')).toExist()
-      await expect(PageHeadingComponent.title()).toHaveText(tenantService)
+      await expect(PageHeadingComponent.title(tenantService)).toExist()
 
       await expect(TabsComponent.activeTab()).toHaveText('About')
       await expect(TabsComponent.secondTab()).toHaveText('Secrets')
@@ -51,7 +51,7 @@ describe('Secrets feature', () => {
         await SecretsPage.open(tenantService)
 
         await expect(PageHeadingComponent.caption('Secrets')).toExist()
-        await expect(PageHeadingComponent.title()).toHaveText(tenantService)
+        await expect(PageHeadingComponent.title(tenantService)).toExist()
 
         await expect(TabsComponent.activeTab()).toHaveText('Secrets')
       })
@@ -62,7 +62,7 @@ describe('Secrets feature', () => {
         await TabsComponent.secondTab().click()
 
         await expect(PageHeadingComponent.caption('Secrets')).toExist()
-        await expect(PageHeadingComponent.title()).toHaveText(tenantService)
+        await expect(PageHeadingComponent.title(tenantService)).toExist()
 
         await expect(TabsComponent.activeTab()).toHaveText('Secrets')
       })
@@ -73,7 +73,7 @@ describe('Secrets feature', () => {
         await SecretsPage.open(tenantService, 'management')
 
         await expect(PageHeadingComponent.caption('Secrets')).toExist()
-        await expect(PageHeadingComponent.title()).toHaveText(tenantService)
+        await expect(PageHeadingComponent.title(tenantService)).toExist()
 
         await expect(SecretsPage.environmentHeader()).toHaveText(
           'Management secrets'
@@ -90,7 +90,7 @@ describe('Secrets feature', () => {
         await SplitPaneComponent.subNavItemLink('management').click()
 
         await expect(PageHeadingComponent.caption('Secrets')).toExist()
-        await expect(PageHeadingComponent.title()).toHaveText(tenantService)
+        await expect(PageHeadingComponent.title(tenantService)).toExist()
 
         await expect(SecretsPage.environmentHeader()).toHaveText(
           'Management secrets'
@@ -128,7 +128,7 @@ describe('Secrets feature', () => {
         await SecretsPage.open(tenantService, 'management')
 
         await expect(PageHeadingComponent.caption('Secrets')).toExist()
-        await expect(PageHeadingComponent.title()).toHaveText(tenantService)
+        await expect(PageHeadingComponent.title(tenantService)).toExist()
 
         await SecretsPage.createSecretName().setValue(keyName)
         await SecretsPage.createSecretValue().setValue('test-value')
@@ -141,7 +141,7 @@ describe('Secrets feature', () => {
         await SecretsPage.secretAction(keyName).click()
 
         await expect(PageHeadingComponent.caption('Update Secret')).toExist()
-        await expect(PageHeadingComponent.title()).toHaveText(tenantService)
+        await expect(PageHeadingComponent.title(tenantService)).toExist()
 
         await SecretsPage.updateHeader().waitForExist()
         await SecretsPage.updateSecretValue().setValue('test-updated-value')
