@@ -43,6 +43,9 @@ services:
 ################################################################################
   localstack:
     image: localstack/localstack:3.2.0
+    ports:
+      - 4566:4566
+      - 4510-4559:4510-4559
     environment:
       - LOCALSTACK_HOST=127.0.0.1
       - SERVICES=s3,sqs,sns,dynamodb,firehose
@@ -76,6 +79,8 @@ services:
 ################################################################################
   cdp-portal-frontend:
     image: defradigital/cdp-portal-frontend:latest
+    ports:
+      - 3000:3000
     extra_hosts:
       - "host.docker.internal:host-gateway"
       - "cdp.127.0.0.1.sslip.io:host-gateway"
@@ -105,6 +110,8 @@ services:
 ################################################################################
   cdp-portal-backend:
     image: defradigital/cdp-portal-backend:latest
+    ports:
+      - 5094:5094
     extra_hosts:
       - "host.docker.internal:host-gateway"
       - "cdp.127.0.0.1.sslip.io:host-gateway"
@@ -128,6 +135,8 @@ services:
 ################################################################################
   cdp-user-service-backend:
     image: defradigital/cdp-user-service-backend:latest
+    ports:
+      - 3001:3001
     extra_hosts:
       - "host.docker.internal:host-gateway"
       - "cdp.127.0.0.1.sslip.io:host-gateway"
@@ -152,6 +161,8 @@ services:
 ################################################################################
   cdp-self-service-ops:
     image: defradigital/cdp-self-service-ops:latest
+    ports:
+      - 3009:3009
     extra_hosts:
       - "host.docker.internal:host-gateway"
       - "cdp.127.0.0.1.sslip.io:host-gateway"
@@ -179,6 +190,8 @@ services:
     env_file:
       - ./docker/config/defaults.env
       - ./docker/config/cdp-portal-stubs.env
+    ports:
+      - 3939:3939
     extra_hosts:
       - "host.docker.internal:host-gateway"
       - "cdp.127.0.0.1.sslip.io:host-gateway"
