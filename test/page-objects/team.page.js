@@ -7,12 +7,14 @@ class TeamPage extends Page {
   }
 
   teamMembers() {
-    return $('[data-testid="team-members"]')
+    return $('[data-testid="team-details"]')
   }
 
   removeButton(name) {
-    const listItem = $$('[data-testid="team-members"] li').find(async (li) => {
-      const textContent = await li.getText()
+    const listItem = $$(
+      '[data-testid="team-details"] .govuk-summary-list__row'
+    ).find(async (row) => {
+      const textContent = await row.getText()
 
       return textContent.includes(name)
     })
