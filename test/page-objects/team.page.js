@@ -6,7 +6,7 @@ class TeamPage extends Page {
     return super.navIsActive('teams')
   }
 
-  teamMembers() {
+  teamDetails() {
     return $('[data-testid="team-details"]')
   }
 
