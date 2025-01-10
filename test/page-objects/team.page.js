@@ -11,7 +11,7 @@ class TeamPage extends Page {
   }
 
   removeButton(name) {
-    const listItem = $$(
+    const rowItem = $$(
       '[data-testid="team-details"] .govuk-summary-list__row'
     ).find(async (row) => {
       const textContent = await row.getText()
@@ -19,7 +19,7 @@ class TeamPage extends Page {
       return textContent.includes(name)
     })
 
-    return listItem.$('a[data-testid="app-link"]*=Remove')
+    return rowItem.$('a[data-testid="remove-link"]')
   }
 
   open(value) {
