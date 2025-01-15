@@ -51,6 +51,7 @@ describe('Deploy service', () => {
 
       await FormComponent.inputLabel('Image Name').click()
       await browser.keys(imageName)
+      await browser.keys('Enter')
 
       await FormComponent.inputLabel('Image Version').click()
 
