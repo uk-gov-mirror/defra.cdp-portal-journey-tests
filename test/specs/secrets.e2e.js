@@ -45,8 +45,9 @@ describe('Secrets feature', () => {
 
       await expect(TabsComponent.activeTab()).toHaveText('About')
       await expect(TabsComponent.secondTab()).toHaveText('Buckets')
-      await expect(TabsComponent.thirdTab()).toHaveText('Secrets')
-      await expect(TabsComponent.fourthTab()).toHaveText('Terminal')
+      await expect(TabsComponent.thirdTab()).toHaveText('Proxy')
+      await expect(TabsComponent.fourthTab()).toHaveText('Secrets')
+      await expect(TabsComponent.fifthTab()).toHaveText('Terminal')
     })
 
     describe('When navigating to Secrets overview page', () => {
@@ -61,8 +62,8 @@ describe('Secrets feature', () => {
 
       it('Should be an overview page of all secrets page', async () => {
         await ServicesPage.open(`/${tenantService}`)
-        await expect(await TabsComponent.thirdTab()).toHaveText('Secrets')
-        await TabsComponent.thirdTab().click()
+        await expect(await TabsComponent.fourthTab()).toHaveText('Secrets')
+        await TabsComponent.fourthTab().click()
 
         await expect(PageHeadingComponent.caption('Secrets')).toExist()
         await expect(PageHeadingComponent.title(tenantService)).toExist()
@@ -170,15 +171,16 @@ describe('Secrets feature', () => {
       await expect(await ServicesPage.logOutLink()).toHaveText('Sign out')
     })
 
-    it('Should be 2 tabs on a "Service" page', async () => {
+    it('Should be 3 tabs on a "Service" page', async () => {
       await expect(await ServicesPage.navIsActive()).toBe(true)
       await expect(PageHeadingComponent.caption('Service')).toExist()
       await expect(PageHeadingComponent.title(tenantService)).toExist()
 
       await expect(TabsComponent.activeTab()).toHaveText('About')
       await expect(TabsComponent.secondTab()).toHaveText('Buckets')
-      await expect(TabsComponent.thirdTab()).not.toExist()
+      await expect(TabsComponent.thirdTab()).toHaveText('Proxy')
       await expect(TabsComponent.fourthTab()).not.toExist()
+      await expect(TabsComponent.fifthTab()).not.toExist()
     })
   })
 })
