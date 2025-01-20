@@ -6,7 +6,7 @@ import AdminPage from 'page-objects/admin.page'
 import UsersPage from 'page-objects/users.page'
 import FormComponent from 'components/form.component'
 import LinkComponent from 'components/link.component'
-import EntityListComponent from 'components/entity-list.component'
+import EntityTableComponent from 'components/entity-table.component'
 import GovukSummaryListComponent from 'components/govuk-summary-list.component'
 import LoginStubPage from 'page-objects/login-stub.page'
 import AdminTeamPage from 'page-objects/admin-team.page'
@@ -51,7 +51,7 @@ async function searchAndSelectACdpUser() {
   await FormComponent.submitButton('Add').click()
 }
 
-describe('Users', () => {
+describe('Admin Users', () => {
   describe('When logged in as admin', () => {
     before(async () => {
       await LoginStubPage.loginAsAdmin()
@@ -157,9 +157,9 @@ describe('Users', () => {
       it('Should be redirected to the "Admin Users" page', async () => {
         await onTheAdminUsersPage()
 
-        await expect(EntityListComponent.content('A Stub')).toExist()
-        await expect(EntityListComponent.content('a.stub@test.co')).toExist()
-        await expect(EntityListComponent.content('@cdp-test-441241')).toExist()
+        await expect(EntityTableComponent.content('A Stub')).toExist()
+        await expect(EntityTableComponent.content('a.stub@test.co')).toExist()
+        await expect(EntityTableComponent.content('@cdp-test-441241')).toExist()
       })
     })
 
@@ -177,8 +177,8 @@ describe('Users', () => {
         await expect(await AdminTeamPage.subNavIsActive()).toBe(true)
         await expect(PageHeadingComponent.title('Teams')).toExist()
 
-        await expect(EntityListComponent.content('Platform')).toExist()
-        await expect(EntityListComponent.content('@cdp-platform')).toExist()
+        await expect(EntityTableComponent.content('Platform')).toExist()
+        await expect(EntityTableComponent.content('@cdp-platform')).toExist()
       })
 
       it("Should be able to go to the Platform Team's page", async () => {
@@ -292,12 +292,12 @@ describe('Users', () => {
       })
 
       it('Should not have deleted the user', async () => {
-        await expect(EntityListComponent.content('A Stub')).not.toExist()
+        await expect(EntityTableComponent.content('A Stub')).not.toExist()
         await expect(
-          EntityListComponent.content('a.stub@test.co')
+          EntityTableComponent.content('a.stub@test.co')
         ).not.toExist()
         await expect(
-          EntityListComponent.content('@cdp-test-441241')
+          EntityTableComponent.content('@cdp-test-441241')
         ).not.toExist()
       })
     })

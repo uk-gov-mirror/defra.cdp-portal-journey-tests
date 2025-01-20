@@ -4,7 +4,7 @@ import PageHeadingComponent from 'components/page-heading.component'
 import AdminPage from 'page-objects/admin.page'
 import FormComponent from 'components/form.component'
 import LinkComponent from 'components/link.component'
-import EntityListComponent from 'components/entity-list.component'
+import EntityTableComponent from 'components/entity-table.component'
 import GovukSummaryListComponent from 'components/govuk-summary-list.component'
 import LoginStubPage from 'page-objects/login-stub.page'
 import AdminTeamsPage from 'page-objects/admin-teams.page'
@@ -107,8 +107,8 @@ describe('Admin Teams', () => {
     it('Should be redirected to the "Admin Teams" page', async () => {
       await onTheAdminTeamsPage()
 
-      await expect(EntityListComponent.content(mockTenantTeam)).toExist()
-      await expect(EntityListComponent.content('@cdp-test-1')).toExist()
+      await expect(EntityTableComponent.content(mockTenantTeam)).toExist()
+      await expect(EntityTableComponent.content('@cdp-test-1')).toExist()
     })
   })
 
@@ -144,7 +144,7 @@ describe('Admin Teams', () => {
     })
 
     it('Should have deleted the team', async () => {
-      await expect(EntityListComponent.content(mockTenantTeam)).not.toExist()
+      await expect(EntityTableComponent.content(mockTenantTeam)).not.toExist()
     })
   })
 
