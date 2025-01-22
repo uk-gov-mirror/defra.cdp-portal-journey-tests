@@ -5,7 +5,7 @@ import ServicesPage from 'page-objects/services.page'
 import FormComponent from 'components/form.component'
 import HeadingComponent from 'components/heading.component'
 import PageHeadingComponent from 'components/page-heading.component'
-import EntityListComponent from 'components/entity-list.component'
+import EntityTableComponent from 'components/entity-table.component'
 import ErrorPage from 'page-objects/error.page'
 import LoginStubPage from 'page-objects/login-stub.page'
 
@@ -148,7 +148,9 @@ describe('Create microservice', () => {
       await expect(await ServicesPage.navIsActive()).toBe(true)
       await expect(PageHeadingComponent.title('Services')).toExist()
 
-      await expect(EntityListComponent.entityLink(testRepositoryName)).toExist()
+      await expect(
+        EntityTableComponent.entityLink(testRepositoryName)
+      ).toExist()
     })
   })
 })
