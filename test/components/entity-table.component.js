@@ -7,10 +7,7 @@ class EntityTableComponent {
   }
 
   entityLink(content) {
-    return $(
-      '[data-testid="app-entity-table"] [data-testid="app-entity-link"]*=' +
-        content
-    )
+    return $('[data-testid="app-entity-link"]*=' + content)
   }
 }
 
