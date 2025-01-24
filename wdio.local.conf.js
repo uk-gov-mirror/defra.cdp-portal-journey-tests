@@ -1,6 +1,7 @@
 import allure from 'allure-commandline'
 
 const debug = process.env.DEBUG
+const baseUrl = process.env.BASE_URL ?? 'localhost:3000'
 const oneMinute = 60 * 1000
 const oneHour = 60 * 60 * 1000
 
@@ -22,7 +23,15 @@ export const config = {
   // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
   // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
   // gets prepended directly.
-  baseUrl: 'http://localhost:3000',
+
+  // | Command               | Description                                                                                                                                     |
+  // |-----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
+  // | npm test:local        | Run against localhost:3000                                                                                                                      |
+  // | npm test:local:debug  | Run against localhost:3000 with debug turned on                                                                                                 |
+  // | npm test:docker       | Run against cdp.127.0.0.1.sslip.io:3333 cdp-local-environment docker compose setup                                                              |
+  // | npm test:docker:local | Run against cdp.127.0.0.1.sslip.io:3000 cdp-local-environment docker compose setup but with cdp-portal-frontend running locally via npm run dev |
+
+  baseUrl: `http://${baseUrl}`,
 
   // Tests to run
   specs: ['./test/specs/**/*.js'],
