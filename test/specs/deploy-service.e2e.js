@@ -9,6 +9,21 @@ import HeadingComponent from 'components/heading.component'
 import ErrorPage from 'page-objects/error.page'
 import LoginStubPage from 'page-objects/login-stub.page'
 
+const waitUntilMemoryDataLoads = () =>
+  browser.waitUntil(
+    async () => {
+      const firsOptionText = await $('[data-testid="deploy-memory"]')
+        .$('option')
+        .getText()
+
+      return firsOptionText.includes('select')
+    },
+    {
+      timeout: 5000,
+      timeoutMsg: 'Memory dropdown did not load memory options data'
+    }
+  )
+
 describe('Deploy service', () => {
   describe('When logged out', () => {
     before(async () => {
@@ -87,6 +102,8 @@ describe('Deploy service', () => {
 
       await FormComponent.inputLabel('CPU size').click()
       await browser.keys(cpu)
+
+      await waitUntilMemoryDataLoads()
 
       await FormComponent.inputLabel('Memory allocation').click()
       await browser.keys(memory)

@@ -114,6 +114,16 @@ describe('Create journey tests', () => {
         )
       ).toExist()
 
+      for (const statusTag of [
+        'github-repository',
+        'proxy',
+        'infrastructure'
+      ]) {
+        await $(
+          `[data-testid="${statusTag}-status-tag"]*=Success`
+        ).waitForExist()
+      }
+
       await TestSuitesPage.link('new test suite page').click()
     })
   })

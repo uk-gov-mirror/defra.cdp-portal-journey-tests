@@ -127,6 +127,19 @@ describe('Create microservice', () => {
         )
       ).toExist()
 
+      for (const statusTag of [
+        'github-repository',
+        'config',
+        'networking',
+        'proxy',
+        'dashboards',
+        'infrastructure'
+      ]) {
+        await $(
+          `[data-testid="${statusTag}-status-tag"]*=Success`
+        ).waitForExist()
+      }
+
       await ServicesPage.link('new microservices page').click()
     })
 

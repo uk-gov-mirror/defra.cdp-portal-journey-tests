@@ -13,9 +13,12 @@ WDIO tests against an environment, github workflow or locally.
     - [Node.js](#nodejs)
   - [Setup](#setup)
   - [Running](#running)
+    - [Test](#test)
+    - [GitHub](#github)
     - [Local](#local)
     - [Local with debug](#local-with-debug)
-    - [GitHub](#github)
+    - [Docker and Docker Local](#docker-and-docker-local)
+    - [Running individual tests](#running-individual-tests)
   - [Debugging](#debugging)
     - [WebdriverIO Plugin](#webdriverio-plugin)
     - [Setup in IntelliJ/Webstorm](#setup-in-intellijwebstorm)
@@ -53,6 +56,41 @@ npm install
 
 ### Running
 
+There are various ways to run these tests via `npm scripts`:
+
+| Command               | Description                                                                                                                                              | Use                                                                          |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| npm test              | Run against `https://cdp-portal-journey-tests.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`                                                            | In the portal UI                                                             |
+| npm test:github       | Run in CI against `http://cdp-portal-frontend:3000` and the cdp-portal-journey-tests docker compose                                                      | In GitHub CI                                                                 |
+| npm test:local        | Run against `http://localhost:3000`                                                                                                                      | Locally ran services                                                         |
+| npm test:local:debug  | Run against `http://localhost:3000` with debug turned on                                                                                                 | Locally ran services with debug                                              |
+| npm test:docker       | Run against `http://cdp.127.0.0.1.sslip.io:3333` cdp-local-environment docker compose setup                                                              | Against cdp-local-environment docker compose                                 |
+| npm test:docker:local | Run against `http://cdp.127.0.0.1.sslip.io:3000` cdp-local-environment docker compose setup but with cdp-portal-frontend running locally via npm run dev | Against cdp-local-environment docker compose, with local cdp-portal-frontend |
+
+See below for more details on when to use the specific `npm scripts` shown above.
+
+#### Test
+
+```bash
+npm test
+```
+
+This is used in the CDP Portal to run the tests against the deployed service in a chosen environment.
+
+#### GitHub
+
+To mimic the GitHub workflow locally. Start up the docker compose:
+
+```bash
+docker compose up --wait-timeout 300 -d --quiet-pull --force-recreate
+```
+
+Then run the following command:
+
+```bash
+npm run test:github
+```
+
 #### Local
 
 To run against portal running locally on `http://localhost:3000`:
@@ -69,18 +107,29 @@ To debug a local version of the portal running on `http://localhost:3000`:
 npm run test:local:debug
 ```
 
-#### GitHub
+#### Docker and Docker Local
 
-To mimic the GitHub workflow locally. Start up the docker compose:
+To run these tests against the `docker compose` from https://github.com/DEFRA/cdp-local-environment/
 
-```bash
-docker compose up --wait-timeout 300 -d --quiet-pull --force-recreate
-```
+> Follow the instructions in https://github.com/DEFRA/cdp-local-environment/README.md around starting the docker compose
+> setup. You will also find details on how to run specific services locally if you are writing tests against local code.
 
 Then run the following command:
 
 ```bash
-npm run test:github
+npm run test:docker
+```
+
+Or if you are running `cdp-portal-frontend` locally:
+
+```bash
+npm run test:docker:local
+```
+
+#### Running individual tests
+
+```bash
+npm run test:local -- --spec test/specs/deploy-service.e2e.js
 ```
 
 ### Debugging
@@ -132,7 +181,7 @@ npm run test-local:debug
 Use the following command in code:
 
 ```javascript
-browser.debug()
+await browser.debug()
 ```
 
 ## Production
