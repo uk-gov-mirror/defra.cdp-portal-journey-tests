@@ -15,6 +15,7 @@ WDIO tests against an environment, github workflow or locally.
   - [Running](#running)
     - [Local](#local)
     - [Local with debug](#local-with-debug)
+    - [Running individual tests](#running-individual-tests)
     - [GitHub](#github)
   - [Debugging](#debugging)
     - [WebdriverIO Plugin](#webdriverio-plugin)
@@ -53,6 +54,17 @@ npm install
 
 ### Running
 
+There are various ways to run these tests via `npm scripts`:
+
+| Command               | Description                                                                                                                                              |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| npm test              | Run against `https://cdp-portal-journey-tests.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`                                                            |
+| npm test:github       | Run in CI against `http://cdp-portal-frontend:3000` and the cdp-portal-journey-tests docker compose                                                      |
+| npm test:local        | Run against `http://localhost:3000`                                                                                                                      |
+| npm test:local:debug  | Run against `http://localhost:3000` with debug turned on                                                                                                 |
+| npm test:docker       | Run against `http://cdp.127.0.0.1.sslip.io:3333` cdp-local-environment docker compose setup                                                              |
+| npm test:docker:local | Run against `http://cdp.127.0.0.1.sslip.io:3000` cdp-local-environment docker compose setup but with cdp-portal-frontend running locally via npm run dev |
+
 #### Local
 
 To run against portal running locally on `http://localhost:3000`:
@@ -67,6 +79,12 @@ To debug a local version of the portal running on `http://localhost:3000`:
 
 ```bash
 npm run test:local:debug
+```
+
+#### Running individual tests
+
+```bash
+npm run test:local -- --spec test/specs/deploy-service.e2e.js
 ```
 
 #### GitHub
@@ -132,7 +150,7 @@ npm run test-local:debug
 Use the following command in code:
 
 ```javascript
-browser.debug()
+await browser.debug()
 ```
 
 ## Production
