@@ -9,21 +9,21 @@ WDIO tests against an environment, github workflow or locally.
 > Contains non-ephemeral flows.
 
 - [Local Development](#local-development)
-  - [Requirements](#requirements)
-    - [Node.js](#nodejs)
+- [Requirements](#requirements)
+  - [Node.js](#nodejs)
   - [Setup](#setup)
-  - [Running](#running)
-    - [Test](#test)
-    - [GitHub](#github)
-    - [Local](#local)
-    - [Local with debug](#local-with-debug)
-    - [Docker and Docker Local](#docker-and-docker-local)
-    - [Running individual tests](#running-individual-tests)
-  - [Debugging](#debugging)
-    - [WebdriverIO Plugin](#webdriverio-plugin)
-    - [Setup in IntelliJ/Webstorm](#setup-in-intellijwebstorm)
-    - [Debug environment variable](#debug-environment-variable)
-    - [WebdriverIO debug command](#webdriverio-debug-command)
+- [Running](#running)
+  - [Test](#test)
+  - [GitHub](#github)
+  - [Local](#local)
+  - [Local with debug](#local-with-debug)
+  - [Docker and Docker Local](#docker-and-docker-local)
+  - [Running individual tests](#running-individual-tests)
+- [Debugging](#debugging)
+  - [WebdriverIO Plugin](#webdriverio-plugin)
+  - [Setup in IntelliJ/Webstorm](#setup-in-intellijwebstorm)
+  - [Debug environment variable](#debug-environment-variable)
+  - [WebdriverIO debug command](#webdriverio-debug-command)
 - [Production](#production)
   - [Running the tests](#running-the-tests)
 - [Requirements of CDP Environment Tests](#requirements-of-cdp-environment-tests)
@@ -33,16 +33,19 @@ WDIO tests against an environment, github workflow or locally.
 
 ## Local Development
 
-### Requirements
+## Requirements
 
-#### Node.js
+### Node.js
 
-Please install [Node.js](http://nodejs.org/) `>= v20` and [npm](https://nodejs.org/) `>= v9`. You will find it
-easier to use the Node Version Manager [nvm](https://github.com/creationix/nvm)
+Please install [Node.js](http://nodejs.org/) `>= v22` and [npm](https://nodejs.org/) `>= v9`.
+
+> [!TIP]
+> To install Node.js and npm Use Node Version Manager [nvm](https://github.com/creationix/nvm)
 
 To use the correct version of Node.js for this application, via nvm:
 
 ```bash
+cd cdp-portal-journey-tests
 nvm use
 ```
 
@@ -54,21 +57,21 @@ Install application dependencies:
 npm install
 ```
 
-### Running
+## Running
 
 There are various ways to run these tests via `npm scripts`. Easiest way to work out what they do is to look at the urls
 used in the below table. Under the table there are more details on when to use the specific `npm scripts`.
 
-| Command               | Description                                                                                                                                              | Use                                                                                  |
-| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| npm test              | Run against `https://cdp-portal-journey-tests.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`                                                            | In the portal UI                                                                     |
-| npm test:github       | Run in CI against `http://cdp-portal-frontend:3000` and the cdp-portal-journey-tests docker compose                                                      | In GitHub CI                                                                         |
-| npm test:local        | Run against `http://localhost:3000`                                                                                                                      | Locally ran services                                                                 |
-| npm test:local:debug  | Run against `http://localhost:3000` with debug turned on                                                                                                 | Locally ran services with debug                                                      |
-| npm test:docker       | Run against `http://cdp.127.0.0.1.sslip.io:3333` cdp-local-environment docker compose setup                                                              | Against cdp-local-environment docker compose, optional with locally running services |
-| npm test:docker:local | Run against `http://cdp.127.0.0.1.sslip.io:3000` cdp-local-environment docker compose setup but with cdp-portal-frontend running locally via npm run dev | Against cdp-local-environment docker compose, with local cdp-portal-frontend         |
+| Command                 | Description                                                                                                                                                      | Use                                                                                  |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `npm test`              | Run in portal against `https://cdp-portal-journey-tests.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`                                                          | In the Portal UI against specified environment                                       |
+| `npm test:github`       | Run in CI against `http://cdp-portal-frontend:3000` and the cdp-portal-journey-tests docker compose                                                              | In GitHub CI against cdp-portal-journey-tests docker compose                         |
+| `npm test:local`        | Run locally against `http://localhost:3000`                                                                                                                      | Locally ran services                                                                 |
+| `npm test:local:debug`  | Run locally against `http://localhost:3000` with debug turned on                                                                                                 | Locally ran services with debug                                                      |
+| `npm test:docker`       | Run locally against `http://cdp.127.0.0.1.sslip.io:3333` cdp-local-environment docker compose setup                                                              | Against cdp-local-environment docker compose, optional with locally running services |
+| `npm test:docker:local` | Run locally against `http://cdp.127.0.0.1.sslip.io:3000` cdp-local-environment docker compose setup but with cdp-portal-frontend running locally via npm run dev | Against cdp-local-environment docker compose, with local running cdp-portal-frontend |
 
-#### Test
+### Test
 
 ```bash
 npm test
@@ -76,9 +79,9 @@ npm test
 
 This is used in the CDP Portal to run the tests against the deployed service in a chosen environment.
 
-#### GitHub
+### GitHub
 
-To mimic the GitHub workflow locally. Start up the docker compose:
+To mimic the GitHub workflow locally. Start up the docker compose in this repository:
 
 ```bash
 docker compose up --wait-timeout 300 -d --quiet-pull --force-recreate
@@ -90,7 +93,7 @@ Then run the following command:
 npm run test:github
 ```
 
-#### Local
+### Local
 
 To run against portal running locally on `http://localhost:3000`:
 
@@ -98,7 +101,7 @@ To run against portal running locally on `http://localhost:3000`:
 npm run test:local
 ```
 
-#### Local with debug
+### Local with debug
 
 To debug a local version of the portal running on `http://localhost:3000`:
 
@@ -106,7 +109,7 @@ To debug a local version of the portal running on `http://localhost:3000`:
 npm run test:local:debug
 ```
 
-#### Docker and Docker Local
+### Docker and Docker Local
 
 To run these tests against the `docker compose` from https://github.com/DEFRA/cdp-local-environment/
 
@@ -125,20 +128,20 @@ Or if you are running `cdp-portal-frontend` locally:
 npm run test:docker:local
 ```
 
-#### Running individual tests
+### Running individual tests
 
 ```bash
 npm run test:local -- --spec test/specs/deploy-service.e2e.js
 ```
 
-### Debugging
+## Debugging
 
-#### WebdriverIO Plugin
+### WebdriverIO Plugin
 
 In IntelliJ and Webstorm use the [WebdriverIO Plugin](https://plugins.jetbrains.com/plugin/16147-webdriverio). This
 provides full run, debug and breakpoint capabilities in your WebDriverIO tests.
 
-#### Setup in IntelliJ/Webstorm
+### Setup in IntelliJ/Webstorm
 
 1. Add a `WebdriverIO` configuration template
 1. `Run -> Edit configurations`
@@ -157,7 +160,7 @@ provides full run, debug and breakpoint capabilities in your WebDriverIO tests.
 > If you wish to run against cdp-local-environment, you will need to set the `Wdio config file` to point at `wdio.
 docker.conf.js` in the `WebdriverIO` configuration template:
 
-#### Debug environment variable
+### Debug environment variable
 
 You can also set the following env:
 
@@ -175,7 +178,7 @@ Or use the npm script:
 npm run test-local:debug
 ```
 
-#### WebdriverIO debug command
+### WebdriverIO debug command
 
 Use the following command in code:
 
