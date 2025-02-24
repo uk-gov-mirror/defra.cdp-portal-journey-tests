@@ -6,16 +6,16 @@ import BannerComponent from 'components/banner.component.js'
 describe('Run Test Suite', () => {
   const testSuiteName = 'cdp-env-test-suite'
 
-  const waitForTestStatus = (status, timeout = 20000) =>
+  const waitForTestStatus = (regex, timeout = 20000) =>
     browser.waitUntil(
       async () => {
         const statusText =
           (await TestRunPage.latestTestRun().getText()) ?? 'no match'
-        return statusText.includes(status)
+        return statusText.match(regex)
       },
       {
         timeout,
-        timeoutMsg: `Did not get status ${status} after ${timeout}ms`
+        timeoutMsg: `Did not get status ${regex} after ${timeout}ms`
       }
     )
 
@@ -54,7 +54,8 @@ describe('Run Test Suite', () => {
       await BannerComponent.content(
         'Test run requested successfully'
       ).isDisplayed()
-      await waitForTestStatus('In-progress')
+      // Depending on polling intervals the in-progress set can be missed
+      await waitForTestStatus('In-progress|Finished')
       await waitForTestStatus('Finished')
     })
   })
