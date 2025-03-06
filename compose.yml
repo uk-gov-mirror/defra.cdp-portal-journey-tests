@@ -36,9 +36,9 @@ services:
       - ./docker/scripts/mongodb:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.hello().ok"]
-      interval: 3s
+      interval: 2s
       start_period: 5s
-      retries: 5
+      retries: 10
 
 ################################################################################
   localstack:
@@ -188,7 +188,7 @@ services:
       localstack:
         condition: service_healthy
       mongodb:
-        condition: service_started
+        condition: service_healthy
       redis:
         condition: service_started
     healthcheck:
