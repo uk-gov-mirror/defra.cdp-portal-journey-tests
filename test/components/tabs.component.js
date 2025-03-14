@@ -6,8 +6,10 @@ class TabsComponent {
     return $('[data-testid*="app-tabs-list-item--selected"]')
   }
 
-  tab(index) {
-    return $(`[data-testid="app-tabs-list-item-${index}"]`)
+  tab(value) {
+    return $(
+      `[data-testid="app-tabs-list-item-${value.toLowerCase()}"].*=${value}`
+    )
   }
 }
 
