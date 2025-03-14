@@ -21,7 +21,7 @@ describe('Secrets feature', () => {
     it('Should not be any tabs on a "Service" page', async () => {
       await expect(await ServicesPage.navIsActive()).toBe(true)
       await expect(ServicesPage.pageHeading()).toHaveText(tenantService)
-      await expect(TabsComponent.secondTab()).not.toExist()
+      await expect(TabsComponent.tab(2)).not.toExist()
     })
 
     it('Should not be able to browse to "Secrets" page', async () => {
@@ -44,10 +44,11 @@ describe('Secrets feature', () => {
       await expect(PageHeadingComponent.title(tenantService)).toExist()
 
       await expect(TabsComponent.activeTab()).toHaveText('About')
-      await expect(TabsComponent.secondTab()).toHaveText('Buckets')
-      await expect(TabsComponent.thirdTab()).toHaveText('Proxy')
-      await expect(TabsComponent.fourthTab()).toHaveText('Secrets')
-      await expect(TabsComponent.fifthTab()).toHaveText('Terminal')
+      await expect(TabsComponent.tab(2)).toHaveText('Automation')
+      await expect(TabsComponent.tab(3)).toHaveText('Buckets')
+      await expect(TabsComponent.tab(4)).toHaveText('Proxy')
+      await expect(TabsComponent.tab(5)).toHaveText('Secrets')
+      await expect(TabsComponent.tab(6)).toHaveText('Terminal')
     })
 
     describe('When navigating to Secrets overview page', () => {
@@ -62,8 +63,8 @@ describe('Secrets feature', () => {
 
       it('Should be an overview page of all secrets page', async () => {
         await ServicesPage.open(`/${tenantService}`)
-        await expect(await TabsComponent.fourthTab()).toHaveText('Secrets')
-        await TabsComponent.fourthTab().click()
+        await expect(await TabsComponent.tab(4)).toHaveText('Secrets')
+        await TabsComponent.tab(4).click()
 
         await expect(PageHeadingComponent.caption('Secrets')).toExist()
         await expect(PageHeadingComponent.title(tenantService)).toExist()
@@ -177,10 +178,11 @@ describe('Secrets feature', () => {
       await expect(PageHeadingComponent.title(tenantService)).toExist()
 
       await expect(TabsComponent.activeTab()).toHaveText('About')
-      await expect(TabsComponent.secondTab()).toHaveText('Buckets')
-      await expect(TabsComponent.thirdTab()).toHaveText('Proxy')
-      await expect(TabsComponent.fourthTab()).not.toExist()
-      await expect(TabsComponent.fifthTab()).not.toExist()
+      await expect(TabsComponent.tab(2)).toHaveText('Automation')
+      await expect(TabsComponent.tab(3)).toHaveText('Buckets')
+      await expect(TabsComponent.tab(4)).toHaveText('Proxy')
+      await expect(TabsComponent.tab(5)).not.toExist()
+      await expect(TabsComponent.tab(6)).not.toExist()
     })
   })
 })

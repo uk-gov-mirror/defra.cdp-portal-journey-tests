@@ -6,20 +6,8 @@ class TabsComponent {
     return $('[data-testid*="app-tabs-list-item--selected"]')
   }
 
-  secondTab() {
-    return $('[data-testid="app-tabs-list-item-2"]')
-  }
-
-  thirdTab() {
-    return $('[data-testid="app-tabs-list-item-3"]')
-  }
-
-  fourthTab() {
-    return $('[data-testid="app-tabs-list-item-4"]')
-  }
-
-  fifthTab() {
-    return $('[data-testid="app-tabs-list-item-5"]')
+  tab(index) {
+    return $(`[data-testid="app-tabs-list-item-${index}"]`)
   }
 }
 
