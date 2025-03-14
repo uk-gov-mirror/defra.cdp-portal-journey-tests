@@ -21,7 +21,13 @@ describe('Secrets feature', () => {
     it('Should not be any tabs on a "Service" page', async () => {
       await expect(await ServicesPage.navIsActive()).toBe(true)
       await expect(ServicesPage.pageHeading()).toHaveText(tenantService)
-      await expect(TabsComponent.tab(2)).not.toExist()
+
+      await expect(TabsComponent.tab('About')).not.toExist()
+      await expect(TabsComponent.tab('Automation')).not.toExist()
+      await expect(TabsComponent.tab('Buckets')).not.toExist()
+      await expect(TabsComponent.tab('Proxy')).not.toExist()
+      await expect(TabsComponent.tab('Secrets')).not.toExist()
+      await expect(TabsComponent.tab('Terminal')).not.toExist()
     })
 
     it('Should not be able to browse to "Secrets" page', async () => {
@@ -44,11 +50,11 @@ describe('Secrets feature', () => {
       await expect(PageHeadingComponent.title(tenantService)).toExist()
 
       await expect(TabsComponent.activeTab()).toHaveText('About')
-      await expect(TabsComponent.tab(2)).toHaveText('Automation')
-      await expect(TabsComponent.tab(3)).toHaveText('Buckets')
-      await expect(TabsComponent.tab(4)).toHaveText('Proxy')
-      await expect(TabsComponent.tab(5)).toHaveText('Secrets')
-      await expect(TabsComponent.tab(6)).toHaveText('Terminal')
+      await expect(TabsComponent.tab('Automation')).toExist()
+      await expect(TabsComponent.tab('Buckets')).toExist()
+      await expect(TabsComponent.tab('Proxy')).toExist()
+      await expect(TabsComponent.tab('Secrets')).toExist()
+      await expect(TabsComponent.tab('Terminal')).toExist()
     })
 
     describe('When navigating to Secrets overview page', () => {
@@ -63,8 +69,10 @@ describe('Secrets feature', () => {
 
       it('Should be an overview page of all secrets page', async () => {
         await ServicesPage.open(`/${tenantService}`)
-        await expect(await TabsComponent.tab(4)).toHaveText('Secrets')
-        await TabsComponent.tab(4).click()
+
+        const secretsTab = await TabsComponent.tab('Secrets')
+        await expect(secretsTab).toExist()
+        await secretsTab.click()
 
         await expect(PageHeadingComponent.caption('Secrets')).toExist()
         await expect(PageHeadingComponent.title(tenantService)).toExist()
@@ -165,24 +173,25 @@ describe('Secrets feature', () => {
     })
   })
 
-  describe('When logged in a tenant user', () => {
+  describe('When logged in a tenant user and viewing a service you do not own', () => {
     before(async () => {
       await LoginStubPage.loginAsNonAdmin()
       await ServicesPage.open(`/${tenantService}`)
       await expect(await ServicesPage.logOutLink()).toHaveText('Sign out')
     })
 
-    it('Should be 3 tabs on a "Service" page', async () => {
+    it('Should see non-service owner tabs on a "Service" page', async () => {
       await expect(await ServicesPage.navIsActive()).toBe(true)
       await expect(PageHeadingComponent.caption('Service')).toExist()
       await expect(PageHeadingComponent.title(tenantService)).toExist()
 
       await expect(TabsComponent.activeTab()).toHaveText('About')
-      await expect(TabsComponent.tab(2)).toHaveText('Automation')
-      await expect(TabsComponent.tab(3)).toHaveText('Buckets')
-      await expect(TabsComponent.tab(4)).toHaveText('Proxy')
-      await expect(TabsComponent.tab(5)).not.toExist()
-      await expect(TabsComponent.tab(6)).not.toExist()
+      await expect(TabsComponent.tab('Buckets')).toExist()
+      await expect(TabsComponent.tab('Proxy')).toExist()
+
+      await expect(TabsComponent.tab('Automation')).toExist()
+      await expect(TabsComponent.tab('Secrets')).not.toExist()
+      await expect(TabsComponent.tab('Terminal')).not.toExist()
     })
   })
 })
