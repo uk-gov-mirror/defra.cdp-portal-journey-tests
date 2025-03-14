@@ -189,7 +189,7 @@ describe('Secrets feature', () => {
       await expect(TabsComponent.tab('Buckets')).toExist()
       await expect(TabsComponent.tab('Proxy')).toExist()
 
-      await expect(TabsComponent.tab('Automation')).toExist()
+      await expect(TabsComponent.tab('Automation')).not.toExist()
       await expect(TabsComponent.tab('Secrets')).not.toExist()
       await expect(TabsComponent.tab('Terminal')).not.toExist()
     })
