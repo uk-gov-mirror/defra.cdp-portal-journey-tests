@@ -1,4 +1,5 @@
 import { $ } from '@wdio/globals'
+import kebabCase from 'lodash/kebabCase.js'
 
 /** appTabs component */
 class TabsComponent {
@@ -6,9 +7,9 @@ class TabsComponent {
     return $('[data-testid*="app-tabs-list-item--selected"]')
   }
 
-  tab(value) {
+  tab(textContent) {
     return $(
-      `[data-testid="app-tabs-list-item-${value.toLowerCase()}"].*=${value}`
+      `[data-testid="app-tabs-list-item-${kebabCase(textContent)}"].*=${textContent}`
     )
   }
 }
