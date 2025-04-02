@@ -44,8 +44,10 @@ describe('Deploy service', () => {
     const version = '0.172.0'
     const environment = 'management'
     const instanceCount = '2'
-    const cpu = '1024'
-    const memory = '2048'
+    const cpuFormValue = '1024'
+    const memoryFormValue = '2048'
+    const cpuText = '1 vCPU'
+    const memoryText = '2 GB'
 
     before(async () => {
       await LoginStubPage.loginAsAdmin()
@@ -101,12 +103,12 @@ describe('Deploy service', () => {
       await browser.keys(instanceCount)
 
       await FormComponent.inputLabel('CPU size').click()
-      await browser.keys(cpu)
+      await browser.keys(cpuFormValue)
 
       await waitUntilMemoryDataLoads()
 
       await FormComponent.inputLabel('Memory allocation').click()
-      await browser.keys(memory)
+      await browser.keys(memoryFormValue)
 
       await FormComponent.submitButton('Next').click()
     })
@@ -133,8 +135,8 @@ describe('Deploy service', () => {
         expect.stringContaining(formattedEnvironment)
       )
       await expect(summary).toHaveHTML(expect.stringContaining(instanceCount))
-      await expect(summary).toHaveHTML(expect.stringContaining(cpu))
-      await expect(summary).toHaveHTML(expect.stringContaining(memory))
+      await expect(summary).toHaveHTML(expect.stringContaining(cpuText))
+      await expect(summary).toHaveHTML(expect.stringContaining(memoryText))
 
       await FormComponent.submitButton('Deploy').click()
     })
@@ -171,9 +173,11 @@ describe('Deploy service', () => {
       await expect(deploymentSummary).toHaveHTML(
         expect.stringContaining(instanceCount)
       )
-      await expect(deploymentSummary).toHaveHTML(expect.stringContaining(cpu))
       await expect(deploymentSummary).toHaveHTML(
-        expect.stringContaining('2 GB')
+        expect.stringContaining(cpuText)
+      )
+      await expect(deploymentSummary).toHaveHTML(
+        expect.stringContaining(memoryText)
       )
     })
   })
