@@ -16,6 +16,10 @@ class FormComponent {
     return $('label*=' + content)
   }
 
+  input(id) {
+    return $(`#${id}`)
+  }
+
   submitButton(content) {
     return $('button*=' + content)
   }
