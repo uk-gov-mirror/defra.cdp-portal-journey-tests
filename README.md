@@ -95,7 +95,9 @@ npm run test:github
 
 ### Local
 
-To run against portal running locally on `http://localhost:3000`:
+To run against portal running locally on `http://localhost:3000` or `http://cdp.127.0.0.1.sslip.io:3000`:
+
+> Note to use a different base url, fEx cdp.127.0.0.1.sslip.io:3000 set this value to the env `BASE_URL=cdp.127.0.0.1.sslip.io:3000`
 
 ```bash
 npm run test:local

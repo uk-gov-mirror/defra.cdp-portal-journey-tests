@@ -1,7 +1,7 @@
 import allure from 'allure-commandline'
 
 const debug = process.env.DEBUG
-const baseUrl = process.env.BASE_URL ?? 'localhost:3000'
+const baseUrl = process.env.BASE_URL ?? 'cdp.127.0.0.1.sslip.io:3000'
 const oneMinute = 60 * 1000
 const oneHour = 60 * 60 * 1000
 

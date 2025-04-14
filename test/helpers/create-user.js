@@ -5,6 +5,11 @@ import FormComponent from 'components/form.component'
 import LinkComponent from 'components/link.component'
 import LoginStubPage from 'page-objects/login-stub.page'
 
+/**
+ * Helper to create a user. Contains no expectations
+ * @param {string} searchTerm
+ * @returns {Promise<void>}
+ */
 async function createUser(searchTerm) {
   await LoginStubPage.loginAsAdmin()
 
