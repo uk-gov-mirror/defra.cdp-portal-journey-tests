@@ -36,6 +36,12 @@ aws --endpoint $LOCALSTACK_URL sqs create-queue --region $AWS_REGION --queue-nam
 aws --endpoint $LOCALSTACK_URL sns create-topic --region $AWS_REGION --name run-test-topic
 aws --endpoint $LOCALSTACK_URL sns subscribe --region $AWS_REGION --topic-arn arn:aws:sns:$AWS_REGION:000000000000:run-test-topic --protocol sqs --notification-endpoint  arn:aws:sqs:$AWS_REGION:000000000000:run-test-from-portal
 
+echo Setting up stub migrations
+aws --endpoint $LOCALSTACK_URL sqs create-queue --region $AWS_REGION --queue-name run-migrations-from-portal
+aws --endpoint $LOCALSTACK_URL sns create-topic --region $AWS_REGION --name run-migrations-topic
+aws --endpoint $LOCALSTACK_URL sns subscribe --region $AWS_REGION --topic-arn arn:aws:sns:$AWS_REGION:000000000000:run-migrations-topic --protocol sqs --notification-endpoint  arn:aws:sqs:$AWS_REGION:000000000000:run-migrations-from-portal
+
+
 echo Setting up webshell queues
 aws --endpoint $LOCALSTACK_URL sns create-topic --region $AWS_REGION --name run-webshell-topic
 
