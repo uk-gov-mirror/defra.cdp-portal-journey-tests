@@ -42,6 +42,9 @@ async function createMicroService(name, teamName) {
     await $(`[data-testid="${statusTag}-status-tag"]*=Success`).waitForExist()
   }
 
+  // eslint-disable-next-line wdio/no-pause
+  await browser.pause(11000) // Wait for Portal backend GitHub poll to run (set to 10 seconds)
+
   // Click link to new microservice page
   await ServicesPage.link('new microservices page').click()
 }
