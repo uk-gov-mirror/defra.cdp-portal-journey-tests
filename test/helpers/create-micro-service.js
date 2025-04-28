@@ -42,11 +42,30 @@ async function createMicroService(name, teamName) {
     await $(`[data-testid="${statusTag}-status-tag"]*=Success`).waitForExist()
   }
 
-  // eslint-disable-next-line wdio/no-pause
-  await browser.pause(11000) // Wait for Portal backend GitHub poll to run (set to 10 seconds)
-
   // Click link to new microservice page
   await ServicesPage.link('new microservices page').click()
+
+  // Wait for Portal backend GitHub poll to run and apply Team to new service
+  await browser.waitUntil(
+    async function () {
+      const summaryMarkup = await ServicesPage.summary().getHTML()
+      const hasTeam = summaryMarkup.includes(teamName)
+
+      if (hasTeam) {
+        return true
+      }
+
+      await browser.refresh()
+      // eslint-disable-next-line wdio/no-pause
+      await browser.pause(200) // Wait for page refresh to happen
+      return false
+    },
+    {
+      timeout: 11000,
+      timeoutMsg:
+        'GitHub poll took too long, Team on new microservice not updated'
+    }
+  )
 }
 
 export { createMicroService }
