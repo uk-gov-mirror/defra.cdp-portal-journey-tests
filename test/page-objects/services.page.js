@@ -19,6 +19,10 @@ class ServicesPage extends Page {
     return $('[data-testid="app-autocomplete-input"]')
   }
 
+  summary() {
+    return $('[data-testid="service-summary"]')
+  }
+
   open(value = '') {
     return super.open('/services' + value)
   }
