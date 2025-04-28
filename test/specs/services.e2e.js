@@ -15,7 +15,7 @@ import EntityTableComponent from 'components/entity-table.component.js'
 const adminService = 'cdp-portal-frontend'
 
 describe('Services page', () => {
-  describe.skip('When logged in as admin user', () => {
+  describe('When logged in as admin user', () => {
     before(async () => {
       await LoginStubPage.loginAsAdmin()
     })
