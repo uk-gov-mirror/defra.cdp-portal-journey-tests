@@ -50,6 +50,7 @@ services:
     env_file:
       - ./docker/config/defaults.env
     volumes:
+      - ./docker/scripts/localstack/assets:/opt/code/localstack/assets
       - ./docker/config/defaults.env:/etc/localstack/conf.d/defaults.env:ro
       - ./docker/scripts/localstack:/etc/localstack/init/ready.d
     healthcheck:
