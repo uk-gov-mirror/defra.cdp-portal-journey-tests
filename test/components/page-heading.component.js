@@ -16,6 +16,10 @@ class PageHeadingComponent {
   cta(content) {
     return $('[data-testid="app-page-heading-cta"]*=' + content)
   }
+
+  intro(content) {
+    return $('[data-testid="app-page-heading-intro"]*=' + content)
+  }
 }
 
 export default new PageHeadingComponent()
