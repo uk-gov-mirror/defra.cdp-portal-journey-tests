@@ -42,6 +42,7 @@ runs:
       shell: bash
     - name: Run the tests
       run: |
+        npm run push:migrations
         npm run test:github
         npm run report
       shell: bash
