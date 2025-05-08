@@ -1,6 +1,7 @@
 #!/bin/sh
 
-DIRECTORY="$PWD/assets"
+DIRECTORY="assets"
+LOCALSTACK_URL="http://localstack:4566"
 
 echo "Pushing migrations to S3"
 
