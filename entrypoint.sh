@@ -1,7 +1,5 @@
 #!/bin/sh
 
-npm run push:migrations
-
 echo "run_id: $RUN_ID"
 npm test
 
