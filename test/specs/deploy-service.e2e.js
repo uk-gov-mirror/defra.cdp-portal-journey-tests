@@ -4,25 +4,15 @@ import upperFirst from 'lodash/upperFirst.js'
 
 import DeployPage from 'page-objects/deploy.page'
 import DeploymentsPage from 'page-objects/deployments.page'
-import FormComponent from 'components/form.component'
 import PageHeadingComponent from 'components/page-heading.component'
 import ErrorPage from 'page-objects/error.page'
 import LoginStubPage from 'page-objects/login-stub.page'
-
-const waitUntilMemoryDataLoads = () =>
-  browser.waitUntil(
-    async () => {
-      const firsOptionText = await $('[data-testid="deploy-memory"]')
-        .$('option')
-        .getText()
-
-      return firsOptionText.includes('select')
-    },
-    {
-      timeout: 5000,
-      timeoutMsg: 'Memory dropdown did not load memory options data'
-    }
-  )
+import {
+  confirmDeployment,
+  populateDeploymentDetails,
+  populateDeploymentOptions,
+  waitForDeploymentToFinish
+} from 'helpers/deploy-service.js'
 
 describe('Deploy service', () => {
   describe('When logged out', () => {
@@ -40,14 +30,16 @@ describe('Deploy service', () => {
   })
 
   describe('When logged in as admin user', () => {
-    const imageName = 'cdp-portal-frontend'
-    const version = '0.172.0'
-    const environment = 'management'
-    const instanceCount = '2'
-    const cpuFormValue = '1024'
-    const memoryFormValue = '2048'
-    const cpuText = '1 vCPU'
-    const memoryText = '2 GB'
+    const options = {
+      imageName: 'cdp-portal-backend',
+      version: '0.3.0',
+      environment: 'management',
+      instanceCount: '2',
+      cpuFormValue: '1024',
+      memoryFormValue: '2048',
+      cpuText: '1 vCPU',
+      memoryText: '2 GB'
+    }
 
     before(async () => {
       await LoginStubPage.loginAsAdmin()
@@ -69,25 +61,7 @@ describe('Deploy service', () => {
         )
       ).toExist()
 
-      await FormComponent.inputLabel('Image name').click()
-      await browser.keys(imageName)
-      await browser.keys('Enter')
-
-      await FormComponent.inputLabel('Image version').click()
-
-      // Wait for version to appear in info panel
-      await expect(
-        await $('[data-testid="latest-published-version"]*=' + version)
-      ).toBeDisplayed()
-
-      await browser.keys(version)
-      await browser.keys('Down arrow')
-      await browser.keys('Enter')
-
-      await FormComponent.inputLabel('Environment').click()
-      await browser.keys(environment)
-
-      await FormComponent.submitButton('Next').click()
+      await populateDeploymentDetails(options, true)
     })
 
     it('Should be on the "Deploy options" page', async () => {
@@ -106,21 +80,10 @@ describe('Deploy service', () => {
         )
       ).toExist()
 
-      await FormComponent.inputLabel('Instance count').click()
-      await browser.keys(instanceCount)
-
-      await FormComponent.inputLabel('CPU size').click()
-      await browser.keys(cpuFormValue)
-
-      await waitUntilMemoryDataLoads()
-
-      await FormComponent.inputLabel('Memory allocation').click()
-      await browser.keys(memoryFormValue)
-
-      await FormComponent.submitButton('Next').click()
+      await populateDeploymentOptions(options, true)
     })
 
-    const formattedEnvironment = upperFirst(kebabCase(environment))
+    const formattedEnvironment = upperFirst(kebabCase(options.environment))
 
     it('Should be able to view deployment summary', async () => {
       await expect(browser).toHaveTitle(
@@ -143,55 +106,88 @@ describe('Deploy service', () => {
 
       // Check deploy summary contents
       const $summary = $('[data-testid="deploy-summary"]')
-      await expect($summary).toHaveHTML(expect.stringContaining(imageName))
-      await expect($summary).toHaveHTML(expect.stringContaining(version))
-      await expect($summary).toHaveHTML(expect.stringContaining(environment))
-      await expect($summary).toHaveHTML(expect.stringContaining(instanceCount))
-      await expect($summary).toHaveHTML(expect.stringContaining(cpuText))
-      await expect($summary).toHaveHTML(expect.stringContaining(memoryText))
+      await expect($summary).toHaveHTML(
+        expect.stringContaining(options.imageName)
+      )
+      await expect($summary).toHaveHTML(
+        expect.stringContaining(options.version)
+      )
+      await expect($summary).toHaveHTML(
+        expect.stringContaining(options.environment)
+      )
+      await expect($summary).toHaveHTML(
+        expect.stringContaining(options.instanceCount)
+      )
+      await expect($summary).toHaveHTML(
+        expect.stringContaining(options.cpuText)
+      )
+      await expect($summary).toHaveHTML(
+        expect.stringContaining(options.memoryText)
+      )
 
-      await FormComponent.submitButton('Deploy').click()
+      await confirmDeployment()
     })
 
     it('Should be redirected to the deployment page', async () => {
       await expect(browser).toHaveTitle(
-        `${imageName} ${version} deployment - ${formattedEnvironment} | Core Delivery Platform - Portal`
+        `${options.imageName} ${options.version} deployment - ${formattedEnvironment} | Core Delivery Platform - Portal`
       )
       await expect(await DeploymentsPage.navIsActive()).toBe(true)
 
       await expect(
         PageHeadingComponent.caption('Microservice deployment')
       ).toExist()
-      await expect(await PageHeadingComponent.title(imageName)).toExist()
+      await expect(
+        await PageHeadingComponent.title(options.imageName)
+      ).toExist()
 
       const pageHeadingIntro = PageHeadingComponent.intro(
         'Microservice deployment for'
       )
       await expect(pageHeadingIntro).toExist()
       await expect(pageHeadingIntro).toHaveText(
-        `Microservice deployment for ${imageName}, version ${version} in ${environment}`
+        `Microservice deployment for ${options.imageName}, version ${options.version} in ${options.environment}`
       )
 
       // Check deployment summary contents
       const deploymentSummary = $('[data-testid="deployment-summary"]')
       await expect(deploymentSummary).toHaveHTML(
-        expect.stringContaining(imageName)
+        expect.stringContaining(options.imageName)
       )
       await expect(deploymentSummary).toHaveHTML(
-        expect.stringContaining(version)
+        expect.stringContaining(options.version)
       )
       await expect(deploymentSummary).toHaveHTML(
-        expect.stringContaining(environment)
+        expect.stringContaining(options.environment)
       )
       await expect(deploymentSummary).toHaveHTML(
-        expect.stringContaining(instanceCount)
+        expect.stringContaining(options.instanceCount)
       )
       await expect(deploymentSummary).toHaveHTML(
-        expect.stringContaining(cpuText)
+        expect.stringContaining(options.cpuText)
       )
       await expect(deploymentSummary).toHaveHTML(
-        expect.stringContaining(memoryText)
+        expect.stringContaining(options.memoryText)
       )
+    })
+
+    it('Should see the status change to running', async () => {
+      await expect(browser).toHaveTitle(
+        `${options.imageName} ${options.version} deployment - ${formattedEnvironment} | Core Delivery Platform - Portal`
+      )
+
+      const status = $('[data-testid="deployment-status"]')
+
+      await waitForDeploymentToFinish()
+      await expect(status).toHaveText('Running')
+    })
+
+    it('Should list the new deployment under', async () => {
+      await expect(browser).toHaveTitle(
+        `${options.imageName} ${options.version} deployment - ${formattedEnvironment} | Core Delivery Platform - Portal`
+      )
+      const status = $('[data-testid="deployment-status"]')
+      await expect(status).toHaveText('Running')
     })
   })
 })
