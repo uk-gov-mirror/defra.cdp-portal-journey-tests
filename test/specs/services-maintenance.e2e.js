@@ -10,6 +10,13 @@ import BannerComponent from 'components/banner.component.js'
 import LinkComponent from 'components/link.component.js'
 import ServicesMaintenancePage from 'page-objects/services-maintenance.page.js'
 import { ownerCanViewTab } from 'helpers/owner-can-view-tab.js'
+import {
+  deployService,
+  waitForDeploymentToFinish
+} from 'helpers/deploy-service.js'
+import upperFirst from 'lodash/upperFirst.js'
+import kebabCase from 'lodash/kebabCase.js'
+import { unshutterService } from 'helpers/unshutter-service.js'
 
 const adminOwnedService = 'cdp-portal-frontend'
 
@@ -28,7 +35,7 @@ const checkShutterStatus = async ({
   await expect($thirdShutterStatus).toHaveText(thirdShutterStatus)
 }
 
-describe('Services maintenance page', () => {
+describe('Services maintenance - shuttering', () => {
   describe('When logged out', () => {
     it('Should not be able to browse to maintenance page', async () => {
       await ServicesMaintenancePage.open(adminOwnedService)
@@ -40,11 +47,13 @@ describe('Services maintenance page', () => {
     })
   })
 
-  describe('When logged in as admin user', () => {
+  describe('When shuttering as admin user', () => {
     before(async () => {
       await LoginStubPage.loginAsAdmin()
       await expect(await ServicesPage.logOutLink()).toHaveText('Sign out')
       await ServicesMaintenancePage.open(adminOwnedService)
+      // Ensure the service is in the correct shuttered state
+      await unshutterService(adminOwnedService, 2)
     })
 
     it('And viewing a service you own, should be able to see the maintenance page', async () => {
@@ -145,6 +154,132 @@ describe('Services maintenance page', () => {
           timeout: 20000 // Wait for the shuttered status to change in stubs
         })
       })
+
+      it('Should be able to unshutter the service', async () => {
+        await ServicesMaintenancePage.open(adminOwnedService)
+
+        await ownerCanViewTab('Shuttering', adminOwnedService, 'Maintenance')
+
+        await checkShutterStatus({
+          firstShutterStatus: 'Shuttered',
+          secondShutterStatus: 'Shuttered',
+          thirdShutterStatus: 'Active'
+        })
+
+        const $shutterLink = await LinkComponent.link(
+          'shutter-link-2',
+          'Unshutter'
+        )
+
+        await expect($shutterLink).toExist()
+
+        $shutterLink.click()
+      })
+
+      it('Confirm unshutter panel should contain expected detail', async () => {
+        const $confirmShutterPanel =
+          await ServicesMaintenancePage.confirmShutterPanel()
+
+        await expect($confirmShutterPanel).toHaveHTML(
+          expect.stringContaining('Unshutter the following service url')
+        )
+        await expect($confirmShutterPanel).toHaveHTML(
+          expect.stringContaining('https://portal.cdp-int.defra.cloud')
+        )
+        await expect($confirmShutterPanel).toHaveHTML(
+          expect.stringContaining('Management')
+        )
+        await expect($confirmShutterPanel).toHaveHTML(
+          expect.stringContaining('Shuttered')
+        )
+        await expect($confirmShutterPanel).toHaveHTML(
+          expect.stringContaining('Admin User')
+        )
+
+        await expect(FormComponent.submitButton('Unshutter url')).toExist()
+      })
+
+      it('Should be able to see service unshutter', async () => {
+        await (await FormComponent.submitButton('Unshutter url')).click()
+
+        await ownerCanViewTab('Shuttering', adminOwnedService, 'Maintenance')
+
+        await checkShutterStatus({
+          firstShutterStatus: 'Shuttered',
+          secondShutterStatus: 'Pending',
+          thirdShutterStatus: 'Active'
+        })
+
+        await $('[data-testid="shuttered-status-2"]*=Active').waitForExist({
+          timeout: 20000 // Wait for the shuttered status to change in stubs
+        })
+      })
+    })
+  })
+})
+
+describe('Services maintenance - undeploy', () => {
+  describe('When undeploying as an admin', () => {
+    const options = {
+      imageName: 'cdp-portal-frontend',
+      version: '0.1.0',
+      environment: 'test',
+      instanceCount: '1',
+      cpuFormValue: '1024',
+      memoryFormValue: '2048',
+      cpuText: '1 vCPU',
+      memoryText: '2 GB'
+    }
+
+    before(async () => {
+      await LoginStubPage.loginAsAdmin()
+      await expect(await ServicesPage.logOutLink()).toHaveText('Sign out')
+      await deployService(options)
+      await ServicesMaintenancePage.open(options.imageName)
+    })
+
+    it('Should be able to undeploy the service', async () => {
+      await ServicesMaintenancePage.open(options.imageName)
+      const $undeployLink = await LinkComponent.link(
+        'undeploy-link-1',
+        'Undeploy'
+      )
+      await expect($undeployLink).toExist()
+      $undeployLink.click()
+    })
+
+    it('Should be on the undeploy confirm page', async () => {
+      const confirmUndeployPanel =
+        await ServicesMaintenancePage.confirmUndeployPanel()
+
+      await expect(confirmUndeployPanel).toHaveHTML(
+        expect.stringContaining('Undeploy the following service')
+      )
+      await expect(confirmUndeployPanel).toHaveHTML(
+        expect.stringContaining(options.imageName)
+      )
+      await expect(confirmUndeployPanel).toHaveHTML(
+        expect.stringContaining(options.environment)
+      )
+      await expect(confirmUndeployPanel).toHaveHTML(
+        expect.stringContaining(options.version)
+      )
+      await expect(confirmUndeployPanel).toHaveHTML(
+        expect.stringContaining('Admin User')
+      )
+
+      await expect(FormComponent.submitButton('Undeploy service')).toExist()
+    })
+
+    it('Should be able to see the service undeploy', async () => {
+      await FormComponent.submitButton('Undeploy service').click()
+
+      const formattedEnvironment = upperFirst(kebabCase(options.environment))
+      await expect(browser).toHaveTitle(
+        `${options.imageName} ${options.version} deployment - ${formattedEnvironment} | Core Delivery Platform - Portal`
+      )
+
+      await waitForDeploymentToFinish('Undeployed')
     })
   })
 
