@@ -1,0 +1,31 @@
+[
+  {
+    "environment": "prod",
+    "team": "Platform",
+    "service": "cdp-postgres-service",
+    "pagerDuty": "true",
+    "alertName": "pager-duty-alert",
+    "status": "firing",
+    "startsAt": "2025-07-11T11:57:50Z",
+    "endsAt": "0001-01-01T00:00:00Z",
+    "summary": "Will fire because it has a service field",
+    "description": "Average Response Time Alert",
+    "series": "",
+    "runbookUrl": "",
+    "alertURL": "https://metrics.prod.cdp-int.defra.cloud/alerting/grafana/ae0ko9ppsqv40e/view"
+  },
+  {
+    "environment": "prod",
+    "team": "Platform",
+    "pagerDuty": "true",
+    "alertName": "pager-duty-alert",
+    "status": "firing",
+    "startsAt": "2025-07-11T11:57:50Z",
+    "endsAt": "0001-01-01T00:00:00Z",
+    "summary": "Will NOT fire because service field is missing",
+    "description": "Average Response Time Alert",
+    "series": "",
+    "runbookUrl": "",
+    "alertURL": "https://metrics.prod.cdp-int.defra.cloud/alerting/grafana/ae0ko9ppsqv40e/view"
+  }
+]

@@ -32,6 +32,7 @@
     "report:publish": "npm run report; ./bin/publish-tests.sh"
   },
   "dependencies": {
+    "@aws-sdk/client-sqs": "3.844.0",
     "@wdio/allure-reporter": "9.4.3",
     "@wdio/cli": "9.4.3",
     "@wdio/globals": "9.4.3",

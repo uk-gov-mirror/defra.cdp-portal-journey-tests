@@ -247,8 +247,6 @@ export const config = {
         if (exitCode !== 0) {
           return reject(reportError)
         }
-
-        allure(['open'])
         resolve()
       })
     })
