@@ -1,0 +1,32 @@
+[
+  {
+    "environment": "prod",
+    "team": "Platform",
+    "service": "cdp-postgres-service",
+    "pagerDuty": "true",
+    "alertName": "pager-duty-alert",
+    "status": "firing",
+    "startsAt": "2025-07-11T11:57:50Z",
+    "endsAt": "0001-01-01T00:00:00Z",
+    "summary": "Average Response Time Alert in milliseconds of the http.response.response_time value in Opensearch.",
+    "description": "Average Response Time Alert",
+    "series": "",
+    "runbookUrl": "",
+    "alertURL": "https://metrics.prod.cdp-int.defra.cloud/alerting/grafana/ae0ko9ppsqv40e/view"
+  },
+  {
+    "environment": "prod",
+    "team": "Platform",
+    "service": "cdp-postgres-service",
+    "pagerDuty": "false",
+    "alertName": "not-a-pager-duty-alert",
+    "status": "firing",
+    "startsAt": "2025-07-11T11:57:50Z",
+    "endsAt": "0001-01-01T00:00:00Z",
+    "summary": "This alert won't go to pager duty as pagerDuty flag is false",
+    "description": "Average Response Time Alert",
+    "series": "",
+    "runbookUrl": "",
+    "alertURL": "https://metrics.prod.cdp-int.defra.cloud/alerting/grafana/ae0ko9ppsqv40e/view"
+  }
+]

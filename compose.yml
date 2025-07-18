@@ -185,6 +185,31 @@ services:
       - "cdp.127.0.0.1.sslip.io:host-gateway"
     environment:
       - PORT=3939
+    ports:
+      - 3939:3939
+    depends_on:
+      localstack:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:3939/health"]
+      interval: 3s
+      start_period: 2s
+
+################################################################################
+  cdp-notify:
+    image: defradigital/cdp-notify:${CDP_NOTIFY:-latest}
+    env_file:
+      - ./docker/config/defaults.env
+      - ./docker/config/cdp-notify.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "cdp.127.0.0.1.sslip.io:host-gateway"
+    environment:
+      - PORT=3007
     depends_on:
       localstack:
         condition: service_healthy
