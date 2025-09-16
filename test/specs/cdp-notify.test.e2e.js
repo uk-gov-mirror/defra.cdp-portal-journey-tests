@@ -136,7 +136,7 @@ describe('#cdp-notify', () => {
             custom_details: {
               environment: payload[0].environment,
               service: payload[0].service,
-              teams: ['Platform']
+              teams: ['platform']
             },
             severity: 'critical',
             source: 'grafana',
@@ -160,7 +160,7 @@ describe('#cdp-notify', () => {
             custom_details: {
               environment: payload[0].environment,
               service: payload[0].service,
-              teams: ['Platform']
+              teams: ['platform']
             },
             severity: 'critical',
             source: 'grafana',
@@ -184,7 +184,7 @@ describe('#cdp-notify', () => {
             custom_details: {
               environment: payload[0].environment,
               service: payload[0].service,
-              teams: ['Platform']
+              teams: ['platform']
             },
             severity: 'critical',
             source: 'grafana',
