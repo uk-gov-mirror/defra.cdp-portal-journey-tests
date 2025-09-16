@@ -2,6 +2,7 @@
   {
     "environment": "prod",
     "team": "Platform",
+    "teams": "platform",
     "service": "cdp-postgres-service",
     "pagerDuty": "true",
     "alertName": "pager-duty-alert",
@@ -17,6 +18,7 @@
   {
     "environment": "prod",
     "team": "Platform",
+    "teams": "platform",
     "service": "cdp-postgres-service",
     "pagerDuty": "false",
     "alertName": "not-a-pager-duty-alert",
