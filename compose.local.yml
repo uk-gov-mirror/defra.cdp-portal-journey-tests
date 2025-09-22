@@ -21,6 +21,10 @@ services:
   mongodb:
     networks:
       - cdpnet
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "cdp.127.0.0.1.sslip.io:host-gateway"
+      - "cdp.--1.sslip.io:host-gateway"
     ports:
       - 27017:27017
     restart: always
@@ -29,6 +33,10 @@ services:
   localstack:
     networks:
       - cdpnet
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "cdp.127.0.0.1.sslip.io:host-gateway"
+      - "cdp.--1.sslip.io:host-gateway"
     ports:
       - 4566:4566
       - 4510-4559:4510-4559
@@ -44,24 +52,23 @@ services:
   redis:
     networks:
       - cdpnet
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "cdp.127.0.0.1.sslip.io:host-gateway"
+      - "cdp.--1.sslip.io:host-gateway"
     ports:
       - 6379:6379
 
   ################################################################################
   selenium-chrome:
+    # do we need this for local dev?
     networks:
       - cdpnet
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "cdp.127.0.0.1.sslip.io:host-gateway"
+      - "cdp.--1.sslip.io:host-gateway"
 
-  ################################################################################
-  squid:
-    image: ubuntu/squid:5.7-23.04_beta
-    container_name: squid
-    networks:
-      - cdpnet
-    ports:
-      - 3128:3128
-    volumes:
-      - ./config/squid.conf:/etc/squid/squid.conf:ro
 
   ################################################################################
   cdp-portal-frontend:
@@ -69,6 +76,10 @@ services:
       - cdpnet
     ports:
       - 3000:3000
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "cdp.127.0.0.1.sslip.io:host-gateway"
+      - "cdp.--1.sslip.io:host-gateway"
     env_file:
       - config/local-defaults.env
       - config/cdp-portal-frontend.env
@@ -111,6 +122,10 @@ services:
   cdp-portal-backend:
     networks:
       - cdpnet
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "cdp.127.0.0.1.sslip.io:host-gateway"
+      - "cdp.--1.sslip.io:host-gateway"
     ports:
       - 5094:5094
     env_file:
@@ -123,6 +138,10 @@ services:
   cdp-user-service-backend:
     networks:
       - cdpnet
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "cdp.127.0.0.1.sslip.io:host-gateway"
+      - "cdp.--1.sslip.io:host-gateway"
     ports:
       - 3001:3001
     env_file:
@@ -138,6 +157,10 @@ services:
   cdp-self-service-ops:
     networks:
       - cdpnet
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "cdp.127.0.0.1.sslip.io:host-gateway"
+      - "cdp.--1.sslip.io:host-gateway"
     ports:
       - 3009:3009
     env_file:
@@ -156,11 +179,19 @@ services:
     env_file:
       - config/local-defaults.env
       - config/cdp-portal-stubs.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "cdp.127.0.0.1.sslip.io:host-gateway"
+      - "cdp.--1.sslip.io:host-gateway"
 
   ################################################################################
   cdp-notify:
     networks:
       - cdpnet
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "cdp.127.0.0.1.sslip.io:host-gateway"
+      - "cdp.--1.sslip.io:host-gateway"
     env_file:
       - config/local-defaults.env
       - config/cdp-notify.env
@@ -168,21 +199,6 @@ services:
       - 3007:3007
     profiles:
       - portal
-
-  ################################################################################
-  cdp-webshell-proxy:
-    image: defradigital/cdp-webshell-proxy:${CDP_WEBSHELL_PROXY:-latest}
-    container_name: cdp-webshell-proxy
-    networks:
-      - cdpnet
-    ports:
-      - 8085:8085
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-      - "cdp.127.0.0.1.sslip.io:host-gateway"
-      - "cdp.--1.sslip.io:host-gateway"
-    profiles:
-      - terminal
 
 ################################################################################
 

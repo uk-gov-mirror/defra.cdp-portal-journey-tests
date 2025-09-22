@@ -3,36 +3,32 @@ services:
   # infrastructure services
   ################################################################################
   mongodb:
-    image: mongo:7.0
+    image: mongo:6.0.26
     container_name: cdp-infra-mongodb
     command: ["--replSet", "rs0", "--bind_ip_all"]
-    volumes:
-      - cdp-infra-mongodb-data:/data
     healthcheck:
       test: ["CMD-SHELL", "mongosh --quiet --eval 'db.adminCommand({ ping: 1 })' && exit 0 || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 3
       start_period: 30s
-    networks:
-      - cdpnet
 
   # Step 1: Initialize replica set
   mongodb-replica-init:
-    image: mongo:7.0
+    image: mongo:6.0.26
+    network_mode: "service:mongodb"
     depends_on:
       mongodb:
         condition: service_healthy
     volumes:
       - ./scripts/init-replica-set.js:/init-replica-set.js
-    command: mongosh --host mongodb --file /init-replica-set.js
-    networks:
-      - cdpnet
+    command: mongosh --file /init-replica-set.js
     restart: "no"
 
   # Step 2: Run data initialization scripts (after replica set is ready)
   mongodb-data-init:
-    image: mongo:7.0
+    image: mongo:6.0.26
+    network_mode: "service:mongodb"
     depends_on:
       mongodb-replica-init:
         condition: service_completed_successfully
@@ -40,22 +36,15 @@ services:
       - ./scripts/mongodb:/scripts
     command: >
       bash -c "
-        echo 'Waiting for replica set to be ready...'
-        until mongosh --host mongodb --eval 'rs.status().ok' --quiet; do
-          echo 'Waiting for primary...'
-          sleep 2
-        done
-        echo 'Running data initialization scripts...'
+        echo 'Running data initialisation scripts...'
         for script in /scripts/*.js; do
           if [ -f \"$$script\" ]; then
             echo 'Running:' $$script
-            mongosh --host mongodb --file $$script
+            mongosh --file $$script
           fi
         done
-        echo 'Data initialization complete'
+        echo 'Data initialisation complete'
       "
-    networks:
-      - cdpnet
     restart: "no"
 
   ################################################################################
@@ -71,8 +60,6 @@ services:
       interval: 3s
       start_period: 5s
       retries: 20
-    networks:
-      - cdpnet
 
   ################################################################################
   redis:
@@ -84,30 +71,19 @@ services:
       start_period: 2s
       retries: 5
     restart: always
-    networks:
-      - cdpnet
 
   ################################################################################
   selenium-chrome:
+    # Maybe move to just CI? Also track bring in the version we use in portal
     image: selenium/standalone-chrome:119.0
     container_name: selenium-chrome
     ports:
       - 4444:4444
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-      - "cdp.127.0.0.1.sslip.io:host-gateway"
-      - "cdp.--1.sslip.io:host-gateway"
-    networks:
-      - cdpnet
 
   ################################################################################
   cdp-portal-frontend:
     image: defradigital/cdp-portal-frontend:${CDP_PORTAL_FRONTEND:-latest}
     container_name: cdp-portal-frontend
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-      - "cdp.127.0.0.1.sslip.io:host-gateway"
-      - "cdp.--1.sslip.io:host-gateway"
     depends_on:
       cdp-portal-backend:
         condition: service_started
@@ -120,21 +96,16 @@ services:
       cdp-portal-stubs:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "http://localhost:3000"]
-      interval: 3s
-      start_period: 2s
-      retries: 3
-    networks:
-      - cdpnet
+      test: ["CMD", "curl", "http://localhost:3000/health"]
+      interval: 5s
+      timeout: 2s
+      start_period: 20s
+      retries: 10
 
   ################################################################################
   cdp-portal-backend:
     image: defradigital/cdp-portal-backend:${CDP_PORTAL_BACKEND:-latest}
     container_name: cdp-portal-backend
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-      - "cdp.127.0.0.1.sslip.io:host-gateway"
-      - "cdp.--1.sslip.io:host-gateway"
     depends_on:
       localstack:
         condition: service_healthy
@@ -148,17 +119,11 @@ services:
         condition: service_started
       cdp-portal-stubs:
         condition: service_healthy
-    networks:
-      - cdpnet
 
   ################################################################################
   cdp-user-service-backend:
     image: defradigital/cdp-user-service-backend:${CDP_USER_SERVICE_BACKEND:-latest}
     container_name: cdp-user-service-backend
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-      - "cdp.127.0.0.1.sslip.io:host-gateway"
-      - "cdp.--1.sslip.io:host-gateway"
     depends_on:
       localstack:
         condition: service_healthy
@@ -169,22 +134,16 @@ services:
       cdp-portal-stubs:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "http://cdp-user-service-backend:3001/health"]
+      test: ["CMD", "curl", "http://localhost:3001/health"]
       interval: 5s
       timeout: 2s
-      start_period: 60s
+      start_period: 20s
       retries: 30
-    networks:
-      - cdpnet
 
   ################################################################################
   cdp-self-service-ops:
     image: defradigital/cdp-self-service-ops:${CDP_SELF_SERVICE_OPS:-latest}
     container_name: cdp-self-service-ops
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-      - "cdp.127.0.0.1.sslip.io:host-gateway"
-      - "cdp.--1.sslip.io:host-gateway"
     depends_on:
       localstack:
         condition: service_healthy
@@ -198,22 +157,16 @@ services:
       - PORT=3009
       - ENABLE_SECURE_CONTEXT=false
     healthcheck:
-      test: ["CMD", "curl", "http://cdp-self-service-ops:3009/health"]
+      test: ["CMD", "curl", "http://localhost:3009/health"]
       interval: 5s
       timeout: 2s
-      start_period: 60s
-      retries: 30
-    networks:
-      - cdpnet
+      start_period: 20s
+      retries: 10
 
   ################################################################################
   cdp-portal-stubs:
     image: defradigital/cdp-portal-stubs:${CDP_PORTAL_STUBS:-latest}
     container_name: cdp-portal-stubs
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-      - "cdp.127.0.0.1.sslip.io:host-gateway"
-      - "cdp.--1.sslip.io:host-gateway"
     ports:
       - 3939:3939
     environment:
@@ -228,22 +181,16 @@ services:
       redis:
         condition: service_started
     healthcheck:
-      test: ["CMD", "curl", "http://cdp-portal-stubs:3939/health"]
+      test: ["CMD", "curl", "http://localhost:3939/health"]
       interval: 5s
       timeout: 2s
       start_period: 20s
       retries: 10
-    networks:
-      - cdpnet
 
   ################################################################################
   cdp-notify:
     image: defradigital/cdp-notify:${CDP_NOTIFY:-latest}
     container_name: cdp-notify
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-      - "cdp.127.0.0.1.sslip.io:host-gateway"
-      - "cdp.--1.sslip.io:host-gateway"
     environment:
       - PORT=3007
     depends_on:
@@ -256,19 +203,10 @@ services:
       redis:
         condition: service_started
     healthcheck:
-      test: ["CMD", "curl", "http://cdp-notify:3007/health"]
+      test: ["CMD", "curl", "http://localhost:3007/health"]
       interval: 5s
       timeout: 2s
       start_period: 20s
       retries: 10
-    networks:
-      - cdpnet
 
   ################################################################################
-
-volumes:
-  cdp-infra-mongodb-data:
-
-networks:
-  cdpnet:
-    driver: bridge
