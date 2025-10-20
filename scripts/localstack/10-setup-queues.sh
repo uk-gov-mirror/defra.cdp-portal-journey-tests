@@ -10,6 +10,8 @@ aws --endpoint $LOCALSTACK_URL sqs create-queue --region $AWS_REGION --queue-nam
 aws --endpoint $LOCALSTACK_URL sns create-topic --region $AWS_REGION --name cdp_workflow_events
 aws --endpoint $LOCALSTACK_URL sns subscribe --region $AWS_REGION --topic-arn arn:aws:sns:eu-west-2:000000000000:cdp_workflow_events --protocol sqs --notification-endpoint arn:aws:sqs:eu-west-2:000000000000:cdp_workflow_events
 
+aws --endpoint $LOCALSTACK_URL sqs create-queue --region $AWS_REGION --queue-name lambda-events
+
 aws --endpoint $LOCALSTACK_URL sqs create-queue --region $AWS_REGION --queue-name cdp_platform_portal_events
 aws --endpoint $LOCALSTACK_URL sns create-topic --region $AWS_REGION --name cdp_platform_portal_events
 aws --endpoint $LOCALSTACK_URL sns subscribe --region $AWS_REGION --topic-arn arn:aws:sns:eu-west-2:000000000000:cdp_platform_portal_events --protocol sqs --notification-endpoint arn:aws:sqs:eu-west-2:000000000000:cdp_platform_portal_events
