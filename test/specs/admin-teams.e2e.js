@@ -72,13 +72,8 @@ describe('Admin Teams', () => {
 
     it('Should be able to find GitHub team', async () => {
       await FormComponent.inputLabel('GitHub team').click()
-      await browser.keys('test')
-
-      const githubSearchResult = await FormComponent.inputLabel(
-        'CDP Test 1 Team - @cdp-test-1'
-      )
-      await expect(githubSearchResult).toExist()
-      await githubSearchResult.click()
+      await browser.keys('cdp-test-1')
+      await $('[data-value="cdp-test-1"]').click()
       await FormComponent.submitButton('Next').click()
     })
 
