@@ -226,6 +226,11 @@ Resources:
     Properties:
       BucketName: "cdp-migrations"
 
+  ImportsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: "cdp-infra-dev-imports"
+
   # --- DynamoDB ---
   SessionTable:
     Type: AWS::DynamoDB::Table
